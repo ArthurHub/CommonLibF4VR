@@ -270,5 +270,23 @@ namespace RE
 		bool                                     wasMotionBlurActive;     // 1E4
 		bool                                     wasPipboyLightActive;    // 1E5
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	// VR's larger Inventory3DManager puts every member after it 0x10 higher. Read from Fallout4VR.exe:
+	// PlayPipboyLoadHolotapeAnim 0xC32D50, PlayPipboyGenericOpenAnim 0xC32ED0, ProcessLoweringReason 0xC352C0,
+	// OnPipboyClosed 0xC339B0, PlayItemAnimOnClose 0xC33DD0, QPipboyActive 0xC33D60, InitPipboy 0xC34780 (saves
+	// wasMotionBlurActive and IsPipboyLightOn() into wasPipboyLightActive, then hides the light when it's set).
+	static_assert(offsetof(PipboyManager, holotapeToLoad) == 0x190);
+	static_assert(offsetof(PipboyManager, closeAnimEvent) == 0x1B0);
+	static_assert(offsetof(PipboyManager, loweringReason) == 0x1B8);
+	static_assert(offsetof(PipboyManager, itemAnimOnClose) == 0x1C0);
+	static_assert(offsetof(PipboyManager, fastTravelLocation) == 0x1C8);
+	static_assert(offsetof(PipboyManager, pipboyOpening) == 0x1D6);
+	static_assert(offsetof(PipboyManager, pipboyActive) == 0x1D8);
+	static_assert(offsetof(PipboyManager, autoSaveOnClose) == 0x1F1);
+	static_assert(offsetof(PipboyManager, wasMotionBlurActive) == 0x1F4);
+	static_assert(offsetof(PipboyManager, wasPipboyLightActive) == 0x1F5);
+	static_assert(sizeof(PipboyManager) == 0x200);
+#else
 	static_assert(sizeof(PipboyManager) == 0x1F0);
+#endif
 }

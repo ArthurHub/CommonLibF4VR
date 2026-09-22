@@ -616,6 +616,9 @@ namespace RE
 	static_assert(offsetof(PlayerCharacter, firstPersonBipedAnim) == 0xFE0);
 	static_assert(offsetof(PlayerCharacter, firstPerson3D) == 0xFE8);
 	static_assert(offsetof(PlayerCharacter, tintingData) == 0x1170);
+	// Read from Fallout4VR.exe: IsPipboyLightOn 0xF27790 tests pipboyLight, ShowPipboyLight 0xF277B0 writes both.
+	static_assert(offsetof(PlayerCharacter, pipboyLight) == 0x10A8);
+	static_assert(offsetof(PlayerCharacter, niPipboyLight) == 0x10B0);
 #else
 	static_assert(sizeof(PlayerCharacter) == 0xE10);
 #endif

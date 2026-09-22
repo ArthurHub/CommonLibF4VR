@@ -11,6 +11,7 @@
 #include "RE/Bethesda/TESCondition.h"
 #include "RE/NetImmerse/NiColor.h"
 #include "RE/NetImmerse/NiPoint.h"
+#include "RE/NetImmerse/NiSmartPointer.h"
 
 namespace RE
 {
@@ -46,7 +47,11 @@ namespace RE
 		kType = kNonShadowBox | kNonShadowSpot | kOmniShadow | kHemiShadow | kSpotShadow
 	};
 
+	class BSLight;
 	class MenuOpenCloseEvent;
+	class NiAVObject;
+	class NiLight;
+	class TESObjectREFR;
 
 	class __declspec(novtable) TESBoundAnimObject :
 		public TESBoundObject  // 00
@@ -241,6 +246,18 @@ namespace RE
 		static constexpr auto RTTI{ RTTI::TESObjectLIGH };
 		static constexpr auto VTABLE{ VTABLE::TESObjectLIGH };
 		static constexpr auto FORM_ID{ ENUM_FORM_ID::kLIGH };
+
+		// Build the light under a_parent: a new NiPointLight (or the one already there) filled from this form, and
+		// its BSLight, added to the scene and returned in a_bsLight. The form's values are copied only here; a live
+		// light keeps them until it is built again. a_ref's own light settings apply when given, and its radius
+		// unless a_ignoreRefRadius. a_dynamic makes the light dynamic, and a_noShadows builds it without shadows
+		// whatever its flags. PlayerCharacter::ShowPipboyLight passes (nullptr, node, true, true, false, ..., false).
+		NiLight* GenDynamic(TESObjectREFR* a_ref, NiAVObject* a_parent, bool a_dynamic, bool a_ignoreRefRadius, bool a_unk5, NiPointer<BSLight>* a_bsLight, float a_unk7, bool a_noShadows)
+		{
+			using func_t = decltype(&TESObjectLIGH::GenDynamic);
+			static REL::Relocation<func_t> func{ REL::ID(30546) };
+			return func(this, a_ref, a_parent, a_dynamic, a_ignoreRefRadius, a_unk5, a_bsLight, a_unk7, a_noShadows);
+		}
 
 		// members
 		OBJ_LIGH                data;            // 148

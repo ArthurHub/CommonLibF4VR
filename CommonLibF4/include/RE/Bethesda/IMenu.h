@@ -977,42 +977,60 @@ namespace RE
 		}
 
 		// members
-		bool     useBoundForScale: 1;                                                            // 010:0
-		bool     startedZoomThisFrame: 1;                                                        // 010:1
-		bool     useStoredModelPosition: 1;                                                      // 010:2
-		bool     rotating: 1;                                                                    // 010:3
-		bool     modelPositionInScreenCoords: 1;                                                 // 010:4
-		bool     centerOnBoundCenter: 1;                                                         // 010:5
-		NiPoint3 modelPosition;                                                                  // 014
-		float    modelScale;                                                                     // 020
-		alignas(0x10) BSTArray<LoadedInventoryModel> loadedModels;                               // 030
-		NiPoint3                                                      initialPosition;           // 048
-		NiPoint3                                                      storedPostion;             // 054
-		NiMatrix3                                                     initialRotation;           // 060
-		NiQuaternion                                                  storedRotation;            // 090
-		NiPoint2                                                      previousInput;             // 0A0
-		NiPointer<nsInventory3DManager::NewInventoryMenuItemLoadTask> loadTask;                  // 0A8
-		TESObjectREFR*                                                tempRef;                   // 0B0
-		BSTSmartPointer<ExtraDataList>                                originalExtra;             // 0B8
-		BSFixedString                                                 str3DRendererName;         // 0C0
-		BGSInventoryItem                                              queuedDisplayItem;         // 0C8
-		std::uint32_t                                                 itemExtraIndex;            // 0D8
-		TESForm*                                                      itemBase;                  // 0E0
-		std::int8_t                                                   disableInputUserCount;     // 0E8
-		BSTSet<BSFixedString>                                         disableRendererUsers;      // 0F0
-		float                                                         storedXRotation;           // 120
-		float                                                         zoomDirection;             // 124
-		float                                                         zoomProgress;              // 128
-		float                                                         minZoomModifier;           // 12C
-		float                                                         maxZoomModifier;           // 130
-		std::uint32_t                                                 hightlightedPart;          // 134
-		bool                                                          queueShowItem;             // 138
-		bool                                                          mouseRotation;             // 139
-		bool                                                          prevUsesCursorFlag;        // 13A
-		bool                                                          prevUpdateUsesCursorFlag;  // 13B
-		bool                                                          addedLightsToScene;        // 13C
+		bool     useBoundForScale: 1;                                                     // 010:0
+		bool     startedZoomThisFrame: 1;                                                 // 010:1
+		bool     useStoredModelPosition: 1;                                               // 010:2
+		bool     rotating: 1;                                                             // 010:3
+		bool     modelPositionInScreenCoords: 1;                                          // 010:4
+		bool     centerOnBoundCenter: 1;                                                  // 010:5
+		NiPoint3 modelPosition;                                                           // 014
+		float    modelScale;                                                              // 020
+		alignas(0x10) BSTArray<LoadedInventoryModel> loadedModels;                        // 030
+		NiPoint3                                                      initialPosition;    // 048
+		NiPoint3                                                      storedPostion;      // 054
+		NiMatrix3                                                     initialRotation;    // 060
+		NiQuaternion                                                  storedRotation;     // 090
+		NiPoint2                                                      previousInput;      // 0A0
+		NiPointer<nsInventory3DManager::NewInventoryMenuItemLoadTask> loadTask;           // 0A8
+		TESObjectREFR*                                                tempRef;            // 0B0
+		BSTSmartPointer<ExtraDataList>                                originalExtra;      // 0B8
+		BSFixedString                                                 str3DRendererName;  // 0C0
+		BGSInventoryItem                                              queuedDisplayItem;  // 0C8
+		std::uint32_t                                                 itemExtraIndex;     // 0D8
+		TESForm*                                                      itemBase;           // 0E0
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+		// VR adds a ref-counted object and a byte here, so disableInputUserCount is at 0F1 and every member from
+		// disableRendererUsers on sits 8 higher than on flat, making the manager 0x150 (and every PipboyManager
+		// member after it 0x10 higher). Read from Fallout4VR.exe: the constructor 0x13068B0, the destructor
+		// 0x1306BC0 (releases unkE8), ShouldHandleEvent 0x13081D0 (handles input only while disableInputUserCount
+		// is 0, which PipboyManager::InitPipboy increments), StoreModelXRotation (storedXRotation at 128) and
+		// HighlightPart (hightlightedPart at 13C).
+		NiPointer<NiRefObject> unkE8;                  // 0E8
+		std::int8_t            unkF0;                  // 0F0
+		std::int8_t            disableInputUserCount;  // 0F1
+#else
+		std::int8_t disableInputUserCount;  // 0E8
+#endif
+		BSTSet<BSFixedString> disableRendererUsers;      // 0F0
+		float                 storedXRotation;           // 120
+		float                 zoomDirection;             // 124
+		float                 zoomProgress;              // 128
+		float                 minZoomModifier;           // 12C
+		float                 maxZoomModifier;           // 130
+		std::uint32_t         hightlightedPart;          // 134
+		bool                  queueShowItem;             // 138
+		bool                  mouseRotation;             // 139
+		bool                  prevUsesCursorFlag;        // 13A
+		bool                  prevUpdateUsesCursorFlag;  // 13B
+		bool                  addedLightsToScene;        // 13C
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	static_assert(offsetof(Inventory3DManager, disableRendererUsers) == 0xF8);
+	static_assert(offsetof(Inventory3DManager, hightlightedPart) == 0x13C);
+	static_assert(sizeof(Inventory3DManager) == 0x150);
+#else
 	static_assert(sizeof(Inventory3DManager) == 0x140);
+#endif
 
 	class __declspec(novtable) WorkshopMenu :
 		public GameMenuBase,                                 // 000
@@ -1121,7 +1139,11 @@ namespace RE
 		bool                                                                                        exitDebounce;                            // 432
 		msvc::unique_ptr<FXWorkshopMenu>                                                            workshopMenuBase;                        // 438
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	// VR layout not mapped beyond Inventory3DManager: Fallout4VR.exe allocates 0x470 (0xC12D27).
+#else
 	static_assert(sizeof(WorkshopMenu) == 0x440);
+#endif
 
 	class __declspec(novtable) PipboySubMenu :
 		public BSTEventSink<PipboyValueChangedEvent>  // 00
@@ -1531,7 +1553,11 @@ namespace RE
 		bool                                           suppressed;                     // 42C
 		bool                                           menuOpening;                    // 42D
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	// VR layout not mapped beyond Inventory3DManager: the VR subclasses are larger.
+#else
 	static_assert(sizeof(ContainerMenuBase) == 0x430);
+#endif
 
 	class __declspec(novtable) ContainerMenu :
 		public ContainerMenuBase  // 000
@@ -1566,7 +1592,11 @@ namespace RE
 		bool                                  plantedExplosiveWeapon;    // 43E
 		bool                                  containerIsAnimatingOpen;  // 43F
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	// VR layout not mapped beyond Inventory3DManager: Fallout4VR.exe allocates 0x490 (0x12EB060).
+#else
 	static_assert(sizeof(ContainerMenu) == 0x440);
+#endif
 
 	class __declspec(novtable) DialogueMenu :
 		public GameMenuBase  // 00
@@ -1656,7 +1686,11 @@ namespace RE
 		BarterMenuTentativeInventoryUIInterface                  containerTentativeInv;      // 4F8
 		bool                                                     confirmingTrade;            // 578
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	// VR layout not mapped beyond Inventory3DManager: Fallout4VR.exe allocates 0x5A0 (0xB21BB7).
+#else
 	static_assert(sizeof(BarterMenu) == 0x580);
+#endif
 
 	class __declspec(novtable) MessageBoxMenu :
 		public GameMenuBase,                      // 00
@@ -1781,7 +1815,11 @@ namespace RE
 		bool                                       initialized;               // 335
 		bool                                       soundsQueued;              // 336
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	// VR layout not mapped beyond Inventory3DManager: the VR subclasses are larger.
+#else
 	static_assert(sizeof(WorkbenchMenuBase) == 0x340);
+#endif
 
 	class __declspec(novtable) ExamineConfirmMenu :
 		public GameMenuBase  // 00
@@ -2053,7 +2091,11 @@ namespace RE
 		char                                               renameItemCancelState[260];          // 6F5
 		BSTSmartPointer<BSInputEnableLayer>                inputLayer;                          // 800
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	// VR layout not mapped beyond Inventory3DManager: Fallout4VR.exe allocates 0x890 (0xB520C7).
+#else
 	static_assert(sizeof(ExamineMenu) == 0x810);
+#endif
 
 	class __declspec(novtable) LoadingMenu :
 		public GameMenuBase  // 00
@@ -2452,5 +2494,9 @@ namespace RE
 		WorkbenchMenuBase::ModChoiceData repairData;                  // 810
 		bool                             queuePreviewedPieceAttatch;  // 848
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	// VR layout not mapped beyond Inventory3DManager: Fallout4VR.exe allocates 0x8D0 (0xBB8D04).
+#else
 	static_assert(sizeof(PowerArmorModMenu) == 0x850);
+#endif
 }
