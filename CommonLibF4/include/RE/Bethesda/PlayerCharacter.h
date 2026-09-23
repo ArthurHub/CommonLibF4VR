@@ -410,6 +410,18 @@ namespace RE
 		BSTArray<ImageSpaceModifierInstanceForm*>               animationImageSpaceInstances;  // 798
 		BSTArray<BSTTuple<NiPointer<NiLight>, bool>>            playerLights;                  // 7B0
 		BSSimpleList<TESQuestStageItem*>                        questLog;                      // 7C8
+		// f4sevr-port: WARNING - these do not hold on VR. The engine's own code reads VR-specific state in
+		// this range: PlayerCharacter::UpdateVRUI (VR 0x140EF7180) dereferences + 0x7E0 and + 0x7F0 as nodes,
+		// writing a transform at their + 0x30 and passing them to NiAVObject::Update, and treats + 0x890 and
+		// + 0x894 as floats - read live in game as 7.134 and 3.834, tracking the player's own angleZ to three
+		// decimals, which is the world-space UI's anchor yaw and the head yaw it trails. F4VR-CommonFramework's
+		// F4VROffsets.h documents that block, and puts the snap-turn target at + 0x8C8 and its latch flags at
+		// + 0x12A4, where this header has pipboyAnimSubGraph and (after the shift) other members again.
+		//
+		// So VR inserts state before 0xB70 as well, not only the 0x470 block below, and the members from about
+		// 0x7E0 up to it are off by however much. The total still comes to 0x470, so sizeof() keeps asserting
+		// and nothing complains. Nobody appears to read these fields on VR today; reach anything in this range
+		// by byte offset until the real VR layout here is mapped.
 		BSTArray<BGSInstancedQuestObjective>                    objectives;                    // 7D9
 		BSTHashMap<TESQuest*, QuestTargetArray*>                questTargets;                  // 7F0
 		BSTHashMap<std::uint32_t, SayOnceTimeStampStruct>       currentSayOnceInfosMap;        // 820

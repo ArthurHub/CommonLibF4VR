@@ -124,6 +124,15 @@ namespace RE
 		kDismemberment = 1u << 11
 	};
 
+	// The inherited refCount is shared with the object's handle: bits 0-9 are the count that DecRefCount and
+	// QRefCount mask for, bit 10 is spare, and bits 11-31 hold the object's own handle index - the handle
+	// lookup checks it with `mov ecx, [rax + 0x28]; shr ecx, 0xB; cmp ecx, <index from the handle>`.
+	//
+	// So a reference taken and never given back is not merely a leak. Increments run over the whole field:
+	// 1024 of them carry out of the count into the spare bit, and 2048 increment the handle index, after which
+	// the object fails its own identity check - lookups against it return nothing, and the game dies in
+	// Actor::~Actor with nothing of the mod's on the stack. Resolve a handle, read from it, and release it;
+	// BSPointerHandleManagerInterface::GetSmartPointer hands back a counted reference for you to own.
 	class __declspec(novtable) BSHandleRefObject :
 		public NiRefObject  // 00
 	{
