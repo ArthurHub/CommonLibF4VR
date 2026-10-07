@@ -467,6 +467,7 @@ set(SOURCES
 	src/REL/IAT.cpp
 	src/REL/IDDB.cpp
 	src/REL/Module.cpp
+	src/REL/NoGame.cpp
 	src/REL/Relocation.cpp
 	src/REL/Version.cpp
 	src/REX/W32.cpp

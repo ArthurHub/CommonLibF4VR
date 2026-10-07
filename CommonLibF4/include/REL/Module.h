@@ -5,6 +5,14 @@
 
 namespace REL
 {
+	/**
+	 * Whether the process runs with no game in it: Module then has a base that is only reserved address space
+	 * and IDDB has every ID at offset 0, so an address resolves, and using it is an access violation.
+	 * It is false in src/REL/NoGame.cpp, alone in that file so the linker takes it from the library only when the
+	 * executable does not define it. An executable of unit tests defines it true in one of its own sources.
+	 */
+	extern const bool NO_GAME;
+
 	class Module
 	{
 	public:

@@ -6,6 +6,18 @@ namespace REL
 {
 	Module::Module()
 	{
+		if (NO_GAME) {
+			// larger than the game's image, and only reserved: every address in it faults when it is used
+			constexpr std::size_t size = 0x10000000;
+			_filename = RUNTIMES.front();
+			_filePath = _filename;
+			_base = reinterpret_cast<std::uintptr_t>(REX::W32::VirtualAlloc(nullptr, size, REX::W32::MEM_RESERVE, REX::W32::PAGE_NOACCESS));
+			_natvis = _base;
+			_version = Version{ 1, 2, 72, 0 };
+			_runtime = Runtime::VR;
+			return;
+		}
+
 		const auto getFilename = [&]() {
 			return REX::W32::GetEnvironmentVariableW(
 				ENVIRONMENT.data(),

@@ -76,6 +76,11 @@ namespace REL
 {
 	IDDB::IDDB()
 	{
+		if (NO_GAME) {
+			// no game, so no address library to read: see id2offset
+			return;
+		}
+
 		const auto version = Module::get().version();
 		const auto path = std::format("Data/F4SE/Plugins/version-{}.{}", version.string("-"sv), Module::IsVR() ? "csv"sv : "bin"sv);
 		if (!_mmap.open(path)) {
@@ -116,6 +121,11 @@ namespace REL
 
 	[[nodiscard]] std::size_t IDDB::id2offset(std::uint64_t a_id) const
 	{
+		if (NO_GAME) {
+			// the start of Module's base, where nothing can be read or called
+			return 0;
+		}
+
 		if (_id2offset.empty()) {
 			stl::report_and_fail("data is empty"sv);
 		}
