@@ -122,6 +122,9 @@ namespace RE
 		void SetIgnoreKeyboardMouse(bool a_value) noexcept { ignoreKeyboardMouse = a_value; }
 
 		// members
+		// VR has one context less (see INPUT_CONTEXT_ID), so every member after controlMaps sits 8 lower:
+		// linkedMappings at 108, contextPriorityStack at 120, byTextEntryCount at 138, as the constructor
+		// 0x1BB38D0 builds them
 		InputContext*                                                      controlMaps[std::to_underlying(UserEvents::INPUT_CONTEXT_ID::kTotal)];  // 008
 		BSTArray<LinkedMapping>                                            linkedMappings;                                                         // 110
 		BSTArray<REX::EnumSet<UserEvents::INPUT_CONTEXT_ID, std::int32_t>> contextPriorityStack;                                                   // 128
@@ -130,5 +133,11 @@ namespace RE
 		bool                                                               ignoreActivateDisabledEvents;                                           // 142
 		REX::EnumSet<PC_GAMEPAD_TYPE, std::int32_t>                        pcGamePadMapType;                                                       // 144
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)
+	static_assert(offsetof(ControlMap, contextPriorityStack) == 0x120);
+	static_assert(offsetof(ControlMap, byTextEntryCount) == 0x138);
+	static_assert(sizeof(ControlMap) == 0x140);
+#else
 	static_assert(sizeof(ControlMap) == 0x148);
+#endif
 }

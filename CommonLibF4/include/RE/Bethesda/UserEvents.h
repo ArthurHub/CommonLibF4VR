@@ -75,7 +75,12 @@ namespace RE
 			kVertibird,
 			kPlayBinkMenu,
 			kRobotModAddendum,
+#if !defined(ENABLE_FALLOUT_VR) || defined(ENABLE_FALLOUT_NG) || defined(ENABLE_FALLOUT_F4)
+			// VR has no Creation Club context, so it has 32 and kNone is 33: Fallout4VR.exe has no
+			// CreationClubMenu, ControlMap's constructor (0x1BB38D0) zeroes a table of 32, and a menu that
+			// takes no context holds 33
 			kCreationClub,
+#endif
 
 			kTotal,
 
