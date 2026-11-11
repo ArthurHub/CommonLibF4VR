@@ -25,6 +25,7 @@ namespace RE
 	class NiObjectGroup;
 	class NiParticles;
 	class NiParticleSystem;
+	class NiPointLight;
 	class NiStream;
 	class NiSwitchNode;
 	class NiTriBasedGeom;
@@ -64,6 +65,13 @@ namespace RE
 		virtual NiParticleSystem*          IsParticleSystem() { return nullptr; }                                           // 12
 		virtual BSLines*                   IsLinesGeom() { return nullptr; }                                                // 13
 		virtual NiLight*                   IsLight() { return nullptr; }                                                    // 14
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+		// FO4VR has two more casts here, so every slot from here on is two higher than the flat
+		// number in its comment (NiObject ends at 29). Only NiPointLight and NiSpotLight
+		// override them, both returning this; the names follow from that.
+		virtual NiPointLight*       IsPointLight() { return nullptr; }        // VR 16
+		virtual const NiPointLight* IsPointLight() const { return nullptr; }  // VR 15
+#endif
 		virtual bhkNiCollisionObject*      IsBhkNiCollisionObject() { return nullptr; }                                     // 15
 		virtual bhkBlendCollisionObject*   IsBhkBlendCollisionObject() { return nullptr; }                                  // 16
 		virtual bhkRigidBody*              IsBhkRigidBody() { return nullptr; }                                             // 17
@@ -83,6 +91,10 @@ namespace RE
 		virtual NiObjectGroup*             GetGroup() const { return nullptr; }                                             // 25
 		virtual void                       SetGroup(NiObjectGroup*) { return; }                                             // 26
 		virtual NiControllerManager*       IsNiControllerManager() { return nullptr; }                                      // 27
+
+		// A build for both flat and VR keeps the flat table above, so on FO4VR the virtuals
+		// from IsBhkNiCollisionObject on reach the wrong slot there. Use a VR-only build, or
+		// REL::RelocateVirtual with the flat slot and the flat slot plus two.
 
 		F4_HEAP_REDEFINE_NEW(NiObject);
 	};
