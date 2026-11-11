@@ -125,7 +125,11 @@ namespace RE
 		virtual RenderPassArray*     GetRenderPasses_LocalMap(BSGeometry*, std::uint32_t, BSShaderAccumulator*) { return nullptr; }            // 2D
 		virtual BSRenderPass*        CreateVatsMaskRenderPass(BSGeometry*) { return nullptr; }                                                 // 2E
 		virtual std::uint16_t        GetNumberofPasses([[maybe_unused]] BSGeometry* a_geom) { return 1; }                                      // 2F
+#if !defined(ENABLE_FALLOUT_VR) || defined(FALLOUT_CROSS_VR)
+		// Not in FO4VR's table: there the virtuals below sit one slot lower relative to the
+		// ones above (which, like every NiObject virtual, are two higher than on flat).
 		virtual BSRenderPass*        GetRenderDepthPass(BSGeometry*) { return nullptr; }                                                       // 30
+#endif
 		virtual bool                 CanMerge(const BSShaderProperty* a_prop);                                                                 // 31
 		virtual void                 SetMaterialAlpha(float) { return; }                                                                       // 32
 		virtual float                QMaterialAlpha() const { return 1.0F; }                                                                   // 33

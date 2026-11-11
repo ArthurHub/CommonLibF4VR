@@ -66,6 +66,10 @@ namespace RE
 		virtual void                       DoGetLookingLocation(NiPoint3& a_location) const = 0;                                           // 1E
 		virtual bool                       DoGetSprinting() const = 0;                                                                     // 1F
 		virtual bool                       DoIsHovering() const = 0;                                                                       // 20
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+		// FO4VR only. ActorState returns its extra movement bit (ActorState::vrMoveModeFlag).
+		virtual bool DoGetVRMoveModeFlag() const = 0;  // VR 21
+#endif
 	};
 	static_assert(sizeof(IMovementState) == 0x8);
 
