@@ -534,7 +534,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TerminalHacked::Event>* GetEventSource()
 		{
 			using func_t = decltype(&TerminalHacked::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::ID(425579) };
+			static REL::Relocation<func_t> func{ REL::VariantID(425579, 0, 0xF33090) };
 			return func();
 		}
 	};
@@ -546,7 +546,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESActivateEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESActivateEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::ID(166230) };
+			static REL::Relocation<func_t> func{ REL::VariantID(166230, 0, 0x42A390) };
 			return func();
 		}
 
@@ -653,7 +653,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESFurnitureEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESFurnitureEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::RelocationID(678665, 2201844) };
+			static REL::Relocation<func_t> func{ REL::VariantID(678665, 2201844, 0x42B330) };
 			return func();
 		}
 

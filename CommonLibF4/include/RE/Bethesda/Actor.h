@@ -572,7 +572,7 @@ namespace RE
 		bool IsWeaponSubgraphFinishedLoading(const Actor& a_actor)
 		{
 			using func_t = decltype(&AIProcess::IsWeaponSubgraphFinishedLoading);
-			static REL::Relocation<func_t> func{ REL::RelocationID(320183, 2231757) };
+			static REL::Relocation<func_t> func{ REL::VariantID(320183, 2231757, 0xE8D010) };
 			return func(this, a_actor);
 		}
 
@@ -647,7 +647,7 @@ namespace RE
 		TESPackage* GetPackageThatIsRunning()
 		{
 			using func_t = decltype(&AIProcess::GetPackageThatIsRunning);
-			static REL::Relocation<func_t> func{ REL::ID(148295) };
+			static REL::Relocation<func_t> func{ REL::VariantID(148295, 0, 0xE7E9B0) };
 			return func(this);
 		}
 
@@ -1086,7 +1086,7 @@ namespace RE
 		void ClearAttackStates()
 		{
 			using func_t = decltype(&Actor::ClearAttackStates);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1525555, 2229773) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1525555, 2229773, 0xDCEB40) };
 			return func(this);
 		}
 
@@ -1198,7 +1198,7 @@ namespace RE
 		bool GetOfferBarter()
 		{
 			using func_t = decltype(&Actor::GetOfferBarter);
-			static REL::Relocation<func_t> func{ REL::ID(1482717) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1482717, 0, 0xDE7BB0) };
 			return func(this);
 		}
 
@@ -1309,7 +1309,7 @@ namespace RE
 		void RemovePerk(BGSPerk* a_perk)
 		{
 			using func_t = decltype(&Actor::RemovePerk);
-			static REL::Relocation<func_t> func{ REL::ID(1316475) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1316475, 0, 0xDF7000) };
 			return func(this, a_perk);
 		}
 

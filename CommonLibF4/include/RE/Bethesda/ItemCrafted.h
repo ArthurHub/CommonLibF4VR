@@ -34,7 +34,7 @@ namespace RE
 		inline void UnregisterSink(BSTEventSink<Event>* a_sink)
 		{
 			using func_t = decltype(&UnregisterSink);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1054567, 2232808) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1054567, 2232808, 0xEEC2D0) };
 			return func(a_sink);
 		}
 	}

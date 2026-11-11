@@ -47,7 +47,7 @@ namespace RE
 		void SetCursorConstraintsRaw(std::uint32_t a_tlx, std::uint32_t a_tly, std::uint32_t a_width, std::uint32_t a_height)
 		{
 			using func_t = decltype(&MenuCursor::SetCursorConstraintsRaw);
-			static REL::Relocation<func_t> func{ REL::ID(907092) };
+			static REL::Relocation<func_t> func{ REL::VariantID(907092, 0, 0x219DEA0) };
 			return func(this, a_tlx, a_tly, a_width, a_height);
 		}
 

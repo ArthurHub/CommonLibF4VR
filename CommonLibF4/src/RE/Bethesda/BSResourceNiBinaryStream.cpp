@@ -31,28 +31,28 @@ namespace RE
 	void BSResourceNiBinaryStream::Seek(std::ptrdiff_t a_numBytes)
 	{
 		using func_t = decltype(&BSResourceNiBinaryStream::Seek);
-		static REL::Relocation<func_t> func{ REL::ID(358512) };  // rel id ?141B93B30
+		static REL::Relocation<func_t> func{ REL::VariantID(358512, 0, 0x1C12F40) };  // rel id ?141B93B30
 		return func(this, a_numBytes);
 	}
 
 	std::size_t BSResourceNiBinaryStream::DoRead(void* a_buf, std::size_t a_toRead)
 	{
 		using func_t = decltype(&BSResourceNiBinaryStream::DoRead);
-		static REL::Relocation<func_t> func{ REL::ID(424286) };  // rel id ?141B93D00
+		static REL::Relocation<func_t> func{ REL::VariantID(424286, 0, 0x1C13110) };  // rel id ?141B93D00
 		return func(this, a_buf, a_toRead);
 	}
 
 	std::size_t BSResourceNiBinaryStream::DoWrite(const void* a_buf, std::size_t a_toWrite)
 	{
 		using func_t = decltype(&BSResourceNiBinaryStream::DoWrite);
-		static REL::Relocation<func_t> func{ REL::ID(1208863) };  // rel id ?141B93D90
+		static REL::Relocation<func_t> func{ REL::VariantID(1208863, 0, 0x1C131A0) };  // rel id ?141B93D90
 		return func(this, a_buf, a_toWrite);
 	}
 
 	void BSResourceNiBinaryStream::GetBufferInfo([[maybe_unused]] BufferInfo& a_buf)
 	{
 		using func_t = decltype(&BSResourceNiBinaryStream::GetBufferInfo);
-		static REL::Relocation<func_t> func{ REL::ID(265501) };  // rel id ?141B93BA0
+		static REL::Relocation<func_t> func{ REL::VariantID(265501, 0, 0x1C12FB0) };  // rel id ?141B93BA0
 		return func(this, a_buf);
 	}
 

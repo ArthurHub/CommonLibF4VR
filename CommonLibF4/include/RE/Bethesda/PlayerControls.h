@@ -176,7 +176,7 @@ namespace RE
 		bool CanPerformAction(DEFAULT_OBJECT a_action)
 		{
 			using func_t = decltype(&PlayerControls::CanPerformAction);
-			static REL::Relocation<func_t> func{ REL::ID(565925) };
+			static REL::Relocation<func_t> func{ REL::VariantID(565925, 0, 0xFC06F0) };
 			return func(this, a_action);
 		}
 
@@ -221,7 +221,7 @@ namespace RE
 		void DoRegisterHandler(PlayerInputHandler* a_handler, bool a_isHeldStateHandler)
 		{
 			using func_t = decltype(&PlayerControls::DoRegisterHandler);
-			static REL::Relocation<func_t> func{ REL::ID(177801) };
+			static REL::Relocation<func_t> func{ REL::VariantID(177801, 0, 0xFC3490) };
 			return func(this, a_handler, a_isHeldStateHandler);
 		}
 	};

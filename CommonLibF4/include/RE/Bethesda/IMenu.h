@@ -210,7 +210,7 @@ namespace RE
 		void UpdateDataModels()
 		{
 			using func_t = decltype(&GameUIModel::UpdateDataModels);
-			static REL::Relocation<func_t> func{ REL::ID(1269653) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1269653, 0, 0xA54B70) };
 			return func(this);
 		}
 	};
@@ -357,7 +357,7 @@ namespace RE
 		UI_MESSAGE_RESULTS ProcessScaleformEvent(Scaleform::GFx::Movie* a_movie, const IUIMessageData* a_data)
 		{
 			using func_t = decltype(&IMenu::ProcessScaleformEvent);
-			static REL::Relocation<func_t> func{ REL::ID(150211) };
+			static REL::Relocation<func_t> func{ REL::VariantID(150211, 0, 0x21998A0) };
 			return func(this, a_movie, a_data);
 		}
 
@@ -496,7 +496,7 @@ namespace RE
 		Scaleform::GFx::Value* AcquireFlashObjectByPath(const Scaleform::GFx::Movie& a_parentMovie, const char* a_absolutePathToMember)
 		{
 			using func_t = decltype(&BSGFxObject::AcquireFlashObjectByPath);
-			static REL::Relocation<func_t> func{ REL::ID(1065592) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1065592, 0, 0x217B3A0) };
 			return func(this, a_parentMovie, a_absolutePathToMember);
 		}
 	};
@@ -615,7 +615,7 @@ namespace RE
 		virtual BSEventNotifyControl ProcessEvent(const ApplyColorUpdateEvent& a_event, BSTEventSource<ApplyColorUpdateEvent>* a_source) override  // 01
 		{
 			using func_t = decltype(&BSGFxShaderFXTarget::ProcessEvent);
-			static REL::Relocation<func_t> func{ REL::ID(848563) };
+			static REL::Relocation<func_t> func{ REL::VariantID(848563, 0, 0x217BE30) };
 			return func(this, a_event, a_source);
 		}
 
@@ -630,7 +630,7 @@ namespace RE
 		void CreateAndSetFiltersToColor(const NiColor& a_color, float a_brightness)
 		{
 			using func_t = void (BSGFxShaderFXTarget::*)(const NiColor&, float);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1487925, 2287028) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1487925, 2287028, 0x217BC40) };
 			func(this, a_color, a_brightness);
 		}
 
@@ -720,14 +720,14 @@ namespace RE
 		virtual void SetIsTopButtonBar(bool a_isTopButtonBar) override  // 08
 		{
 			using func_t = decltype(&GameMenuBase::SetIsTopButtonBar);
-			static REL::Relocation<func_t> func{ REL::ID(1367353) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1367353, 0, 0xB543C0) };
 			return func(this, a_isTopButtonBar);
 		}
 
 		virtual void OnMenuDisplayStateChanged() override  // 0A
 		{
 			using func_t = decltype(&GameMenuBase::OnMenuDisplayStateChanged);
-			static REL::Relocation<func_t> func{ REL::ID(1274450) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1274450, 0, 0xB54430) };
 			return func(this);
 		}
 
@@ -764,7 +764,7 @@ namespace RE
 		virtual void SetViewportRect(const NiRect<float>& a_viewportRect) override  // 12
 		{
 			using func_t = decltype(&GameMenuBase::SetViewportRect);
-			static REL::Relocation<func_t> func{ REL::ID(1554334) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1554334, 0, 0xB542E0) };
 			return func(this, a_viewportRect);
 		}
 
@@ -772,7 +772,7 @@ namespace RE
 		virtual void AppendShaderFXInfos(BSTAlignedArray<UIShaderFXInfo>& a_colorFXInfos, BSTAlignedArray<UIShaderFXInfo>& a_backgroundFXInfos) const  // 13
 		{
 			using func_t = decltype(&GameMenuBase::AppendShaderFXInfos);
-			static REL::Relocation<func_t> func{ REL::ID(583584) };
+			static REL::Relocation<func_t> func{ REL::VariantID(583584, 0, 0xB54330) };
 			return func(this, a_colorFXInfos, a_backgroundFXInfos);
 		}
 
@@ -930,7 +930,7 @@ namespace RE
 		void Begin3D()
 		{
 			using func_t = decltype(&Inventory3DManager::Begin3D);
-			static REL::Relocation<func_t> func{ REL::ID(662659) };
+			static REL::Relocation<func_t> func{ REL::VariantID(662659, 0, 0x1306D90) };
 			return func(this);
 		}
 
@@ -1156,7 +1156,7 @@ namespace RE
 		BSEventNotifyControl ProcessEvent(const PipboyValueChangedEvent& a_event, BSTEventSource<PipboyValueChangedEvent>* a_source) override
 		{
 			using func_t = decltype(&PipboySubMenu::ProcessEvent);
-			static REL::Relocation<func_t> func{ REL::ID(893703) };
+			static REL::Relocation<func_t> func{ REL::VariantID(893703, 0, 0xBB0800) };
 			return func(this, a_event, a_source);
 		}
 
@@ -1180,7 +1180,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyStatsMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(332518) };
+			static REL::Relocation<func_t> func{ REL::VariantID(332518, 0, 0xBAEE00) };
 			return func(this);
 		}
 
@@ -1200,7 +1200,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboySpecialMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(1426810) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1426810, 0, 0xBAE390) };
 			return func(this);
 		}
 	};
@@ -1217,7 +1217,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyPerksMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(783380) };
+			static REL::Relocation<func_t> func{ REL::VariantID(783380, 0, 0xBA8C60) };
 			return func(this);
 		}
 	};
@@ -1234,7 +1234,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyInventoryMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(762897) };
+			static REL::Relocation<func_t> func{ REL::VariantID(762897, 0, 0xB99C30) };
 			return func(this);
 		}
 	};
@@ -1251,7 +1251,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyQuestMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(1495929) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1495929, 0, 0xBA9B50) };
 			return func(this);
 		}
 	};
@@ -1268,7 +1268,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyWorkshopMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(1370368) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1370368, 0, 0xBB0C20) };
 			return func(this);
 		}
 	};
@@ -1285,7 +1285,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyLogMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(672256) };
+			static REL::Relocation<func_t> func{ REL::VariantID(672256, 0, 0xB90A20) };
 			return func(this);
 		}
 	};
@@ -1326,7 +1326,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyMapMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(92696) };
+			static REL::Relocation<func_t> func{ REL::VariantID(92696, 0, 0xB91D40) };
 			return func(this);
 		}
 
@@ -1352,7 +1352,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyRadioMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(713423) };
+			static REL::Relocation<func_t> func{ REL::VariantID(713423, 0, 0xBAB950) };
 			return func(this);
 		}
 
@@ -1371,7 +1371,7 @@ namespace RE
 		void UpdateData() override
 		{
 			using func_t = decltype(&PipboyPlayerInfoMenu::UpdateData);
-			static REL::Relocation<func_t> func{ REL::ID(426990) };
+			static REL::Relocation<func_t> func{ REL::VariantID(426990, 0, 0xBAC980) };
 			return func(this);
 		}
 	};
@@ -1488,7 +1488,7 @@ namespace RE
 			void IncrementSort()
 			{
 				using func_t = decltype(&ItemSorter::IncrementSort);
-				static REL::Relocation<func_t> func{ REL::ID(1307263) };
+				static REL::Relocation<func_t> func{ REL::VariantID(1307263, 0, 0xB2A7C0) };
 				return func(this);
 			}
 
@@ -1665,7 +1665,7 @@ namespace RE
 		void CompleteTrade()
 		{
 			using func_t = decltype(&BarterMenu::CompleteTrade);
-			static REL::Relocation<func_t> func{ REL::ID(379932) };
+			static REL::Relocation<func_t> func{ REL::VariantID(379932, 0, 0xB18840) };
 			return func(this);
 		}
 
@@ -2027,7 +2027,7 @@ namespace RE
 		void BuildWeaponScrappingArray()
 		{
 			using func_t = decltype(&ExamineMenu::BuildWeaponScrappingArray);
-			static REL::Relocation<func_t> func{ REL::ID(646841) };
+			static REL::Relocation<func_t> func{ REL::VariantID(646841, 0, 0xB42270) };
 			return func(this);
 		}
 

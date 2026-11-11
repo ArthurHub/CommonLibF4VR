@@ -645,7 +645,7 @@ namespace RE
 		static bool IsTerminalRefInUse(TESObjectREFR* a_refr)
 		{
 			using func_t = decltype(&BGSTerminal::IsTerminalRefInUse);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1093565, 2197779) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1093565, 2197779, 0x2EE3C0) };
 			return func(a_refr);
 		}
 

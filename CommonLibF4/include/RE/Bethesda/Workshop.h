@@ -221,7 +221,7 @@ namespace RE
 		inline void InitializePlacementReference(const ContextData& a_context, TESBoundObject& a_object)
 		{
 			using func_t = decltype(&Workshop::InitializePlacementReference);
-			static REL::Relocation<func_t> func{ REL::ID(1577199) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1577199, 0, 0x224A20) };
 			return func(a_context, a_object);
 		}
 
@@ -256,7 +256,7 @@ namespace RE
 		inline void RegisterForItemMoved(BSTEventSink<ItemMovedEvent>* a_sink)
 		{
 			using func_t = decltype(&Workshop::RegisterForItemMoved);
-			static REL::Relocation<func_t> func{ REL::ID(835323) };
+			static REL::Relocation<func_t> func{ REL::VariantID(835323, 0, 0x203790) };
 			return func(a_sink);
 		}
 
@@ -270,14 +270,14 @@ namespace RE
 		inline void RegisterForWorkshopModeEvent(BSTEventSink<WorkshopModeEvent>* a_sink)
 		{
 			using func_t = decltype(&Workshop::RegisterForWorkshopModeEvent);
-			static REL::Relocation<func_t> func{ REL::ID(275798) };
+			static REL::Relocation<func_t> func{ REL::VariantID(275798, 0, 0x203AC0) };
 			return func(a_sink);
 		}
 
 		inline void RequestExitWorkshop(bool a_allowReEntry)
 		{
 			using func_t = decltype(&Workshop::RequestExitWorkshop);
-			static REL::Relocation<func_t> func{ REL::ID(209891) };
+			static REL::Relocation<func_t> func{ REL::VariantID(209891, 0, 0x21A180) };
 			return func(a_allowReEntry);
 		}
 
@@ -319,7 +319,7 @@ namespace RE
 		inline void UnregisterForItemMoved(BSTEventSink<ItemMovedEvent>* a_sink)
 		{
 			using func_t = decltype(&Workshop::UnregisterForItemMoved);
-			static REL::Relocation<func_t> func{ REL::ID(569432) };
+			static REL::Relocation<func_t> func{ REL::VariantID(569432, 0, 0x2037C0) };
 			return func(a_sink);
 		}
 
@@ -340,7 +340,7 @@ namespace RE
 		inline void UpdateActiveEdit(const ContextData& a_context, bool a_multiselect = false)
 		{
 			using func_t = decltype(&Workshop::UpdateActiveEdit);
-			static REL::Relocation<func_t> func{ REL::ID(69261) };
+			static REL::Relocation<func_t> func{ REL::VariantID(69261, 0, 0x21B430) };
 			return func(a_context, a_multiselect);
 		}
 

@@ -867,7 +867,7 @@ namespace RE
 		[[nodiscard]] bool IsInWater()
 		{
 			using func_t = decltype(&TESObjectREFR::IsInWater);
-			static REL::Relocation<func_t> func{ REL::ID(315318) };
+			static REL::Relocation<func_t> func{ REL::VariantID(315318, 0, 0x4C7550) };
 			return func(this);
 		}
 
@@ -937,7 +937,7 @@ namespace RE
 		void RebuildBendableSpline(bool rebuildCollision, NiAVObject* target)
 		{
 			using func_t = decltype(&TESObjectREFR::RebuildBendableSpline);
-			static REL::Relocation<func_t> func{ REL::ID(340319) };
+			static REL::Relocation<func_t> func{ REL::VariantID(340319, 0, 0x3F2B70) };
 			return func(this, rebuildCollision, target);
 		}
 

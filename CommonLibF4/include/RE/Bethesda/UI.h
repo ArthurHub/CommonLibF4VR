@@ -56,7 +56,7 @@ namespace RE
 		[[nodiscard]] bool CustomRendererHasQuads(const BSFixedString& a_customRendererName)
 		{
 			using func_t = decltype(&UI::CustomRendererHasQuads);
-			static REL::Relocation<func_t> func{ REL::ID(1401451) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1401451, 0, 0x20CC510) };
 			return func(this, a_customRendererName);
 		}
 
@@ -109,7 +109,7 @@ namespace RE
 		void RefreshCursor()
 		{
 			using func_t = decltype(&UI::RefreshCursor);
-			static REL::Relocation<func_t> func{ REL::ID(1436639) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1436639, 0, 0x20CD070) };
 			return func(this);
 		}
 

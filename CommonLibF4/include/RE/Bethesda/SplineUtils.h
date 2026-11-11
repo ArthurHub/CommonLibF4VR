@@ -16,7 +16,7 @@ namespace RE
 		inline void ConnectSpline(TESObjectREFR* akEndpoint1, int32_t linkType1, TESObjectREFR* akEndpoint2, int32_t linkType2, TESObjectREFR* akWireRef)
 		{
 			using func_t = decltype(&ConnectSpline);
-			static REL::Relocation<func_t> func{ REL::ID(59311) };
+			static REL::Relocation<func_t> func{ REL::VariantID(59311, 0, 0x210760) };
 			return func(akEndpoint1, linkType1, akEndpoint2, linkType2, akWireRef);
 		}
 	}

@@ -28,7 +28,7 @@ namespace RE
 		inline bool CanHackGateCheck(LOCK_LEVEL a_lockLevel)
 		{
 			using func_t = decltype(&GamePlayFormulas::CanHackGateCheck);
-			static REL::Relocation<func_t> func{ REL::ID(269668) };
+			static REL::Relocation<func_t> func{ REL::VariantID(269668, 0, 0x652C80) };
 			return func(a_lockLevel);
 		}
 

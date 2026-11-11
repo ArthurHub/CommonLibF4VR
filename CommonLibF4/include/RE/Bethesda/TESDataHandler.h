@@ -315,7 +315,7 @@ namespace RE
 		bool IsFormIDInUse(std::uint32_t a_formID)
 		{
 			using func_t = decltype(&TESDataHandler::IsFormIDInUse);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1448838, 2192351) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1448838, 2192351, 0x1253A0) };
 			return func(this, a_formID);
 		}
 

@@ -1028,7 +1028,7 @@ namespace RE
 		bool ClearFavorite()
 		{
 			using func_t = decltype(&ExtraDataList::ClearFavorite);
-			static REL::Relocation<func_t> func{ REL::RelocationID(254434, 2190191) };
+			static REL::Relocation<func_t> func{ REL::VariantID(254434, 2190191, 0x8B340) };
 			return func(this);
 		}
 
@@ -1042,7 +1042,7 @@ namespace RE
 		float GetScale()
 		{
 			using func_t = decltype(&ExtraDataList::GetScale);
-			static REL::Relocation<func_t> func{ REL::ID(1499172) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1499172, 0, 0x8C080) };
 			return func(this);
 		}
 
