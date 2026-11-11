@@ -21,6 +21,13 @@ namespace RE
 			return func(this, a_milliseconds);
 		}
 
+		bool SetVolume(float a_volume)
+		{
+			using func_t = decltype(&BSSoundHandle::SetVolume);
+			static REL::Relocation<func_t> func{ REL::ID(422259) };
+			return func(this, a_volume);
+		}
+
 		// members
 		std::uint32_t soundID;        // 0
 		bool          assumeSuccess;  // 4
