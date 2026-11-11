@@ -100,7 +100,8 @@ namespace RE
 			if ((flags & kWritable) != 0) {
 				return ErrorCode::kUnsupported;
 			}
-			return DoReadAt(a_buffer, a_offset, a_toRead, a_read);
+			// DoReadAt takes the byte count before the position.
+			return DoReadAt(a_buffer, a_toRead, a_offset, a_read);
 		}
 
 		bool Stream::GetName(BSFixedString& a_dst) const
