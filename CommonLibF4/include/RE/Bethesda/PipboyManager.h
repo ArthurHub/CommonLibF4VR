@@ -83,7 +83,7 @@ namespace RE
 		void DisablePipboyShader()
 		{
 			using func_t = decltype(&PipboyManager::DisablePipboyShader);
-			static REL::Relocation<func_t> func{ REL::ID(662519) };
+			static REL::Relocation<func_t> func{ REL::VariantID(662519, 0, 0xC35220) };
 			return func(this);
 		}
 
@@ -118,7 +118,7 @@ namespace RE
 		void OnPipboyCloseAnimFailed()
 		{
 			using func_t = decltype(&PipboyManager::OnPipboyCloseAnimFailed);
-			static REL::Relocation<func_t> func{ REL::ID(1362084) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1362084, 0, 0xC33B60) };
 			return func(this);
 		}
 
@@ -139,7 +139,7 @@ namespace RE
 		void OnPipboyOpenAnimFailed()
 		{
 			using func_t = decltype(&PipboyManager::OnPipboyOpenAnimFailed);
-			static REL::Relocation<func_t> func{ REL::ID(702357) };
+			static REL::Relocation<func_t> func{ REL::VariantID(702357, 0, 0xC33060) };
 			return func(this);
 		}
 

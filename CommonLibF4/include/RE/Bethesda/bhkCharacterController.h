@@ -163,6 +163,19 @@ namespace RE
 		static constexpr auto RTTI{ RTTI::bhkNPCollisionObject };
 		static constexpr auto VTABLE{ VTABLE::bhkNPCollisionObject };
 
+		// FO4VR only (no Address Library ID): bhkNPCollisionObject's UpdateWorldData, in
+		// NiCollisionObject::VR_UpdateWorldDataSlot of the table its constructor
+		// (FO4VR 0x141E07710) installs.
+		static constexpr REL::Offset VR_UpdateWorldDataOffset{ 0x1E09890 };
+
+		/// True when the game is FO4VR and its bhkNPCollisionObject UpdateWorldData starts with
+		/// the expected code.
+		[[nodiscard]] static bool VRCodeMatches()
+		{
+			static constexpr std::uint8_t code[]{ 0x40, 0x55, 0x56, 0x41, 0x54, 0x41 };
+			return REL::Module::IsVR() && REL::code_matches(VR_UpdateWorldDataOffset.address(), code);
+		}
+
 		// add
 		virtual void CreateInstance(bhkWorld& a_world);             // 2D
 		virtual void AddToWorld(bhkWorld& a_world);                 // 2E

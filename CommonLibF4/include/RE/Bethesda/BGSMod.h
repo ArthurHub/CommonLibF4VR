@@ -165,7 +165,7 @@ namespace RE::BGSMod
 			static void FindModsForLooseMod(TESObjectMISC* a_looseMod, BSScrapArray<BGSMod::Attachment::Mod*>& a_result)
 			{
 				using func_t = decltype(&Mod::FindModsForLooseMod);
-				static REL::Relocation<func_t> func{ REL::ID(410363) };
+				static REL::Relocation<func_t> func{ REL::VariantID(410363, 0, 0x2D8890) };
 				return func(a_looseMod, a_result);
 			}
 

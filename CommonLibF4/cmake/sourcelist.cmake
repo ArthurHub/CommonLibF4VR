@@ -269,6 +269,7 @@ set(SOURCES
 	include/RE/Havok/hknpActionManager.h
 	include/RE/Havok/hknpAllHitsCollector.h
 	include/RE/Havok/hknpBSMouseSpringAction.h
+	include/RE/Havok/hknpBSWorld.h
 	include/RE/Havok/hknpBody.h
 	include/RE/Havok/hknpBodyCinfo.h
 	include/RE/Havok/hknpBodyId.h
@@ -282,9 +283,11 @@ set(SOURCES
 	include/RE/Havok/hknpCollisionResult.h
 	include/RE/Havok/hknpConstraintCinfo.h
 	include/RE/Havok/hknpContactEvent.h
+	include/RE/Havok/hknpDynamicCompoundShape.h
 	include/RE/Havok/hknpMaterialId.h
 	include/RE/Havok/hknpMotion.h
 	include/RE/Havok/hknpShape.h
+	include/RE/Havok/hknpShapeInstance.h
 	include/RE/Havok/hknpUniqueBodyIdHitCollector.h
 	include/RE/Havok/hknpWorld.h
 	include/RE/NetImmerse/NiAVObject.h
@@ -379,6 +382,7 @@ set(SOURCES
 	include/RE/msvc/memory.h
 	include/RE/msvc/typeinfo.h
 	include/REL/Common.h
+	include/REL/Guarded.h
 	include/REL/IAT.h
 	include/REL/ID.h
 	include/REL/IDDB.h
@@ -464,6 +468,7 @@ set(SOURCES
 	src/RE/NetImmerse/NiPoint.cpp
 	src/RE/NetImmerse/NiRect.cpp
 	src/RE/Scaleform/GFx/GFx_Player.cpp
+	src/REL/Guarded.cpp
 	src/REL/IAT.cpp
 	src/REL/IDDB.cpp
 	src/REL/Module.cpp

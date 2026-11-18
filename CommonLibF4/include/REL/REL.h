@@ -1,6 +1,7 @@
 #pragma once
 
 #include "REL/Common.h"
+#include "REL/Guarded.h"
 #include "REL/IAT.h"
 #include "REL/ID.h"
 #include "REL/IDDB.h"

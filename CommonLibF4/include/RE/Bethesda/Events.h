@@ -534,7 +534,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TerminalHacked::Event>* GetEventSource()
 		{
 			using func_t = decltype(&TerminalHacked::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::ID(425579) };
+			static REL::Relocation<func_t> func{ REL::VariantID(425579, 0, 0xF33090) };
 			return func();
 		}
 	};
@@ -546,7 +546,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESActivateEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESActivateEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::ID(166230) };
+			static REL::Relocation<func_t> func{ REL::VariantID(166230, 0, 0x42A390) };
 			return func();
 		}
 
@@ -653,7 +653,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESFurnitureEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESFurnitureEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::RelocationID(678665, 2201844) };
+			static REL::Relocation<func_t> func{ REL::VariantID(678665, 2201844, 0x42B330) };
 			return func();
 		}
 
@@ -733,9 +733,15 @@ namespace RE
 		float                                                           criticalDamageMult;      // C0
 		REX::EnumSet<Flag, std::uint32_t>                               flags;                   // C4
 		BGSEquipIndex                                                   equipIndex;              // C8
-		std::uint32_t                                                   material;                // D0
-		REX::EnumSet<BGSBodyPartDefs::LIMB_ENUM, std::uint32_t>         damageLimb;              // D4
+		std::uint32_t                                                   material;                // CC
+		REX::EnumSet<BGSBodyPartDefs::LIMB_ENUM, std::uint32_t>         damageLimb;              // D0
+		std::uint32_t                                                   padD4;                   // D4
+		void*                                                           projectileContext;       // D8
 	};
+	static_assert(offsetof(HitData, equipIndex) == 0xC8);
+	static_assert(offsetof(HitData, material) == 0xCC);
+	static_assert(offsetof(HitData, damageLimb) == 0xD0);
+	static_assert(offsetof(HitData, projectileContext) == 0xD8);
 	static_assert(sizeof(HitData) == 0xE0);
 
 	class TESHitEvent

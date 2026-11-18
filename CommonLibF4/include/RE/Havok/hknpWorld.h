@@ -409,6 +409,22 @@ namespace RE
 			func(this, a_bodyId, a_shape);
 		}
 
+		/// True when FO4VR's SetBodyShape (0x14153AC70) starts with the expected code.
+		[[nodiscard]] static bool SetBodyShapeVRCodeMatches()
+		{
+			static constexpr std::uint8_t code[]{ 0x48, 0x89, 0x5C, 0x24, 0x18, 0x48, 0x89, 0x6C };
+			return REL::code_matches(REL::ID(531033).address(), code);
+		}
+
+		/// True when the engine reference-counts body shapes. SetBodyShape adds a reference to
+		/// the new shape and removes one from the old shape only while this engine-wide flag is
+		/// set (FO4VR flag 0x14386601E, read by setBodyShape 0x14153AC70 and by body creation).
+		[[nodiscard]] static bool AreBodyShapesReferenceCounted()
+		{
+			static REL::Relocation<std::uint8_t*> flag{ REL::ID(1490162) };
+			return *flag != 0;
+		}
+
 		/// Change a body's physics material (affects friction, restitution, etc.).
 		///
 		/// @param a_rebuildCachesMode 0 = rebuild collision caches immediately
@@ -839,6 +855,13 @@ namespace RE
 		{
 			return *reinterpret_cast<hknpBody* const*>(
 				reinterpret_cast<std::uintptr_t>(this) + 0x20);
+		}
+
+		/// GetBodyArray read with REL::guarded_read: nullptr instead of a crash when the world
+		/// pointer is stale.
+		[[nodiscard]] hknpBody* GetBodyArrayGuarded() const noexcept
+		{
+			return REL::guarded_read<hknpBody*>(reinterpret_cast<std::uintptr_t>(this) + 0x20).value_or(nullptr);
 		}
 
 		/// Get a specific body by ID.

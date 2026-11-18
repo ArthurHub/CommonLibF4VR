@@ -19,35 +19,35 @@ namespace RE
 		void* BlockAlloc(std::int32_t a_numBytesIn) override  // 01
 		{
 			using func_t = decltype(&hkLifoAllocator::BlockAlloc);
-			static REL::Relocation<func_t> func{ REL::ID(605837) };
+			static REL::Relocation<func_t> func{ REL::VariantID(605837, 0, 0x158DBB0) };
 			return func(this, a_numBytesIn);
 		}
 
 		void BlockFree(void* a_ptr, std::int32_t a_numBytesIn) override  // 02
 		{
 			using func_t = decltype(&hkLifoAllocator::BlockFree);
-			static REL::Relocation<func_t> func{ REL::ID(778687) };
+			static REL::Relocation<func_t> func{ REL::VariantID(778687, 0, 0x158DBF0) };
 			return func(this, a_ptr, a_numBytesIn);
 		}
 
 		void* BufAlloc(std::int32_t& a_reqNumBytesInOut) override  // 03
 		{
 			using func_t = decltype(&hkLifoAllocator::BufAlloc);
-			static REL::Relocation<func_t> func{ REL::ID(951267) };
+			static REL::Relocation<func_t> func{ REL::VariantID(951267, 0, 0x158DC30) };
 			return func(this, a_reqNumBytesInOut);
 		}
 
 		void BufFree(void* a_ptr, std::int32_t a_numBytes) override  // 04
 		{
 			using func_t = decltype(&hkLifoAllocator::BufFree);
-			static REL::Relocation<func_t> func{ REL::ID(1123850) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1123850, 0, 0x158DC70) };
 			return func(this, a_ptr, a_numBytes);
 		}
 
 		void* BufRealloc(void* a_old, std::int32_t a_oldNumBytes, std::int32_t& a_reqNumBytesInOut) override  // 05
 		{
 			using func_t = decltype(&hkLifoAllocator::BufRealloc);
-			static REL::Relocation<func_t> func{ REL::ID(1296646) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1296646, 0, 0x158DCB0) };
 			return func(this, a_old, a_oldNumBytes, a_reqNumBytesInOut);
 		}
 

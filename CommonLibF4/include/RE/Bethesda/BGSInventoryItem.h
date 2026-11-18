@@ -197,7 +197,7 @@ namespace RE
 		virtual void WriteDataImpl(TESBoundObject& a_baseObj, BGSInventoryItem::Stack& a_stack) override  // 01
 		{
 			using func_t = decltype(&ApplyChangesFunctor::WriteDataImpl);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1291190, 2223194) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1291190, 2223194, 0xB53B70) };
 			return func(this, a_baseObj, a_stack);
 		}
 

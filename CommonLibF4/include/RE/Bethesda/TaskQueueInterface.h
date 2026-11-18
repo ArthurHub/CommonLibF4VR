@@ -22,7 +22,7 @@ namespace RE
 		void QueueClosePipboy()
 		{
 			using func_t = decltype(&TaskQueueInterface::QueueClosePipboy);
-			static REL::Relocation<func_t> func{ REL::ID(69886) };
+			static REL::Relocation<func_t> func{ REL::VariantID(69886, 0, 0xDAEFD0) };
 			return func(this);
 		}
 

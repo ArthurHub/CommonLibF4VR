@@ -22,6 +22,13 @@ namespace RE
 		virtual void OnMouseMoveEvent(const MouseMoveEvent*) { return; }          // 06
 		virtual void OnCharacterEvent(const CharacterEvent*) { return; }          // 07
 		virtual void OnButtonEvent(const ButtonEvent*) { return; }                // 08
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+		// FO4VR has three more event handlers, so the virtuals a derived class adds start at
+		// 0C there, not 09. The event types they take are not mapped.
+		virtual void OnVREvent09(const InputEvent*) { return; }  // VR 09
+		virtual void OnVREvent0A(const InputEvent*) { return; }  // VR 0A
+		virtual void OnVREvent0B(const InputEvent*) { return; }  // VR 0B
+#endif
 
 		F4_HEAP_REDEFINE_NEW(BSInputEventUser);
 

@@ -47,6 +47,7 @@
 
 #include "RE/Bethesda/MemoryManager.h"
 #include "RE/Bethesda/bhkCharacterController.h"
+#include "RE/Havok/hkReferencedObject.h"
 #include "RE/Havok/hkVector4.h"
 #include "RE/Havok/hknpCollisionResult.h"
 #include "RE/NetImmerse/NiPoint.h"
@@ -158,25 +159,40 @@ namespace RE
 			return func(this);
 		}
 
+		/// Releases the world reference that bhkWorld::PickObject leaves in the pick data
+		/// (FO4VR 0x1DF8ED6 stores it at +C0; the game's own callers release it when the
+		/// pick data goes out of scope, for example 0x7F89BD..0x7F8A03).
+		~bhkPickData() noexcept
+		{
+			if (const auto* held = std::exchange(world, nullptr)) {
+				held->RemoveReference();
+			}
+		}
+
+		bhkPickData(const bhkPickData&) = delete;
+		bhkPickData& operator=(const bhkPickData&) = delete;
+
 		// members
-		std::uint64_t        raycastFlags;     // 00 — raycast configuration flags
-		std::uint16_t        raycastMode;      // 08 — query mode (single/all hits)
-		CFilter              collisionFilter;  // 0A — collision layer filter (set before PickObject)
-		std::uint64_t        shapeCastInfo;    // 10 — shape cast extra info
-		std::uint32_t        queryFlags;       // 18 — additional query flags
-		hkVector4f           rayOrigin;        // 20 — ray start point (Havok space, set by SetStartEnd)
-		hkVector4f           rayDest;          // 30 — ray end point (Havok space, set by SetStartEnd)
-		char                 gap40[16];        // 40 — internal state
-		int                  hitStatus;        // 50 — hit status code
-		hknpCollisionResult  result;           // 58 — closest hit collision result
-		hknpCollisionResult* allHitsResult;    // B8 — pointer to all-hits result array
-		std::uint64_t        collisionLayer;   // C0 — resolved collision layer
-		__int64              collector;        // C8 — internal collector pointer
-		int                  collectorStatus;  // D0 — collector state
-		__int16              field_D4;         // D4
-		char                 field_D6;         // D6
-		char                 field_D7;         // D7
+		std::uint64_t       raycastFlags;     // 00 — raycast configuration flags
+		std::uint16_t       raycastMode;      // 08 — query mode (single/all hits)
+		CFilter             collisionFilter;  // 0A — collision layer filter (set before PickObject)
+		std::uint64_t       shapeCastInfo;    // 10 — shape cast extra info
+		std::uint32_t       queryFlags;       // 18 — additional query flags
+		hkVector4f          rayOrigin;        // 20 — ray start point (Havok space, set by SetStartEnd)
+		hkVector4f          rayDest;          // 30 — ray end point (Havok space, set by SetStartEnd)
+		char                gap40[16];        // 40 — internal state
+		int                 hitStatus;        // 50 — hit status code
+		hknpCollisionResult result;           // 60 — closest hit collision result (16-byte aligned)
+		hkReferencedObject* world;            // C0 — the world PickObject queried, holding one reference
+		std::uint64_t       collisionLayer;   // C8 — resolved collision layer
+		__int64             collector;        // D0 — internal collector pointer
+		int                 collectorStatus;  // D8 — collector state
+		__int16             field_DC;         // DC
+		char                field_DE;         // DE
+		char                field_DF;         // DF
 		F4_HEAP_REDEFINE_NEW(bhkPickData);
 	};
 	static_assert(sizeof(bhkPickData) == 0xE0);
+	static_assert(offsetof(bhkPickData, result) == 0x60);
+	static_assert(offsetof(bhkPickData, world) == 0xC0);
 };

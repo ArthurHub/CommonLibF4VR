@@ -633,7 +633,7 @@ namespace RE
 			std::int32_t operator()(const TESForm* a_arg1, const TESForm* a_arg2)
 			{
 				using func_t = decltype(&FormSortFunc::operator());
-				static REL::Relocation<func_t> func{ REL::ID(705530) };
+				static REL::Relocation<func_t> func{ REL::VariantID(705530, 0, 0x5356F0) };
 				return func(this, a_arg1, a_arg2);
 			}
 		};
@@ -799,7 +799,7 @@ namespace RE
 		[[nodiscard]] static ENUM_FORM_ID GetFormTypeFromString(const char* a_formTypeString)
 		{
 			using func_t = decltype(&TESForm::GetFormTypeFromString);
-			static REL::Relocation<func_t> func{ REL::RelocationID(565203, 2193108) };
+			static REL::Relocation<func_t> func{ REL::VariantID(565203, 2193108, 0x15A470) };
 			return func(a_formTypeString);
 		}
 
@@ -2051,7 +2051,7 @@ namespace RE
 		[[nodiscard]] bool ContainsItem(const TESForm* a_form)
 		{
 			using func_t = decltype(&BGSListForm::ContainsItem);
-			static REL::Relocation<func_t> func{ REL::ID(688500) };
+			static REL::Relocation<func_t> func{ REL::VariantID(688500, 0, 0x252390) };
 			return func(this, a_form);
 		}
 
@@ -2582,7 +2582,7 @@ namespace RE
 		void AddButton(MESSAGEBOX_BUTTON* btn)
 		{
 			using func_t = decltype(&BGSMessage::AddButton);
-			static REL::Relocation<func_t> func{ REL::ID(236744) };
+			static REL::Relocation<func_t> func{ REL::VariantID(236744, 0, 0x49E620) };
 			return func(this, btn);
 		}
 

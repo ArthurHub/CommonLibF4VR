@@ -699,7 +699,7 @@ namespace RE
 		inline void BindCObject(const BSTSmartPointer<BSScript::Object>& a_scriptObj, const RefrOrInventoryObj& a_cobj, BSScript::IVirtualMachine& a_vm)
 		{
 			using func_t = decltype(&BindCObject);
-			static REL::Relocation<func_t> func{ REL::ID(81787) };
+			static REL::Relocation<func_t> func{ REL::VariantID(81787, 0, 0x134BA10) };
 			return func(a_scriptObj, a_cobj, a_vm);
 		}
 

@@ -296,6 +296,14 @@ namespace REL
 		explicit Relocation(RelocationID a_id, VariantOffset a_offset) :
 			_impl{ a_id.address() + a_offset.offset() } {}
 
+		// An Address Library ID on flat and a fixed offset on FO4VR, for what the FO4VR
+		// database has no ID for.
+		explicit Relocation(VariantID a_id) :
+			_impl{ a_id.address() } {}
+
+		explicit Relocation(VariantID a_id, std::ptrdiff_t a_offset) :
+			_impl{ a_id.address() + a_offset } {}
+
 		constexpr Relocation& operator=(std::uintptr_t a_address) noexcept
 		{
 			_impl = a_address;

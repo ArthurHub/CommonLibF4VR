@@ -300,15 +300,29 @@ namespace RE
 			REX::W32::ID3D11Device*        device;                   // 0048
 			REX::W32::ID3D11DeviceContext* context;                  // 0050
 			RendererWindow                 renderWindow[32];         // 0058
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+			// FO4VR has 145 render targets and 18 depth stencil targets, so the depth array
+			// starts at 2588 (read from Fallout4VR.exe: the target arrays at 0x1DA29E0, the
+			// depth texture accessors 0x1D99880 and 0x1D99EF0). The members after the depth
+			// array are not mapped for FO4VR.
+			RenderTarget       renderTargets[145];       // 0A58
+			DepthStencilTarget depthStencilTargets[18];  // 2588
+#else
 			RenderTarget                   renderTargets[101];       // 0A58
 			DepthStencilTarget             depthStencilTargets[13];  // 1D48
+#endif
 			CubeMapRenderTarget            cubeMapRenderTargets[2];  // 2500
 			BSCriticalSection              rendererLock;             // 2580
 			const char*                    className;                // 25A8
 			void*                          instance;                 // 25B0
 			bool                           nvapiEnabled;             // 25B8
 		};
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+		static_assert(offsetof(RendererData, renderTargets) == 0xA58);
+		static_assert(offsetof(RendererData, depthStencilTargets) == 0x2588);
+#else
 		static_assert(sizeof(RendererData) == 0x25C0);
+#endif
 
 		class Renderer
 		{
@@ -333,7 +347,9 @@ namespace RE
 			ResetRenderTargets_t resetRenderTargets;  // 08
 			RendererData         data;                // 10
 		};
+#if !defined(ENABLE_FALLOUT_VR) || defined(FALLOUT_CROSS_VR)
 		static_assert(sizeof(Renderer) == 0x25D0);
+#endif
 
 		class Context
 		{

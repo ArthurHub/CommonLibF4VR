@@ -76,7 +76,7 @@ namespace RE
 		[[nodiscard]] bool try_lock_read()
 		{
 			using func_t = decltype(&BSReadWriteLock::try_lock_read);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1372435, 2267901) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1372435, 2267901, 0x1B934B0) };
 			return func(this);
 		}
 

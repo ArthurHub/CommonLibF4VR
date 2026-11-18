@@ -15,6 +15,17 @@ namespace RE
 		static constexpr auto VTABLE{ VTABLE::NiNode };
 		static constexpr auto Ni_RTTI{ Ni_RTTI::NiNode };
 
+		// Address Library ID of NiNode's GetObjectByName (FO4VR 0x141C18500), which searches
+		// the children. See NiAVObject::VR_GetObjectByNameSlot.
+		static constexpr REL::ID GetObjectByNameID{ 1068190 };
+
+		/// True when FO4VR's NiNode GetObjectByName starts with the expected code.
+		[[nodiscard]] static bool VRCodeMatches()
+		{
+			static constexpr std::uint8_t code[]{ 0x48, 0x89, 0x74, 0x24, 0x10, 0x57 };
+			return REL::code_matches(GetObjectByNameID.address(), code);
+		}
+
 		// NOLINTNEXTLINE(modernize-use-equals-default)
 		NiNode() :
 			NiNode(0)
@@ -29,6 +40,19 @@ namespace RE
 		}
 
 		// add
+		// Flat slot in each comment; the FO4VR slot is three higher (see NiAVObject). Of two
+		// overloads, the one that returns the removed child comes first in the vtable.
+#ifndef FALLOUT_CROSS_VR
+		virtual void AttachChild(NiAVObject* a_child, bool a_firstAvail);                                     // 3A
+		virtual void InsertChildAt(std::uint32_t a_idx, NiAVObject* a_child);                                 // 3B
+		virtual void DetachChild(NiAVObject* a_child);                                                        // 3D
+		virtual void DetachChild(NiAVObject* a_child, NiPointer<NiAVObject>& a_avObject);                     // 3C
+		virtual void DetachChildAt(std::uint32_t a_idx);                                                      // 3F
+		virtual void DetachChildAt(std::uint32_t a_idx, NiPointer<NiAVObject>& a_avObject);                   // 3E
+		virtual void SetAt(std::uint32_t a_idx, NiAVObject* a_child);                                         // 41
+		virtual void SetAt(std::uint32_t a_idx, NiAVObject* a_child, NiPointer<NiAVObject>& a_avObject);      // 40
+		virtual void UpdateUpwardPass(NiUpdateData& a_data);                                                  // 42
+#else
 		void AttachChild(NiAVObject* a_child, bool a_firstAvail)  // 3A
 		{
 			REL::RelocateVirtual<decltype(&NiNode::AttachChild)>(0x3A, 0x3D, this, a_child, a_firstAvail);
@@ -42,43 +66,44 @@ namespace RE
 		void DetachChild(NiAVObject* a_child)  // 3D
 		{
 			using DetachChild = void (NiNode::*)(NiAVObject*);
-			REL::RelocateVirtual<DetachChild>(0x3C, 0x40, this, a_child);
+			REL::RelocateVirtual<DetachChild>(0x3D, 0x40, this, a_child);
 		}
 
 		void DetachChild(NiAVObject* a_child, NiPointer<NiAVObject>& a_avObject)  // 3C
 		{
 			using DetachChild = void (NiNode::*)(NiAVObject*, NiPointer<NiAVObject>&);
-			REL::RelocateVirtual<DetachChild>(0x3D, 0x3F, this, a_child, a_avObject);
+			REL::RelocateVirtual<DetachChild>(0x3C, 0x3F, this, a_child, a_avObject);
 		}
 
 		void DetachChildAt(std::uint32_t a_idx)  // 3F
 		{
 			using DetachChildAt = void (NiNode::*)(std::uint32_t);
-			REL::RelocateVirtual<DetachChildAt>(0x3E, 0x42, this, a_idx);
+			REL::RelocateVirtual<DetachChildAt>(0x3F, 0x42, this, a_idx);
 		}
 
 		void DetachChildAt(std::uint32_t a_idx, NiPointer<NiAVObject>& a_avObject)  // 3E
 		{
 			using DetachChildAt = void (NiNode::*)(std::uint32_t, NiPointer<NiAVObject>&);
-			REL::RelocateVirtual<DetachChildAt>(0x3F, 0x41, this, a_idx, a_avObject);
+			REL::RelocateVirtual<DetachChildAt>(0x3E, 0x41, this, a_idx, a_avObject);
 		}
 
 		void SetAt(std::uint32_t a_idx, NiAVObject* a_child)  // 41
 		{
 			using SetAt = void (NiNode::*)(std::uint32_t, NiAVObject*);
-			REL::RelocateVirtual<SetAt>(0x40, 0x44, this, a_idx, a_child);
+			REL::RelocateVirtual<SetAt>(0x41, 0x44, this, a_idx, a_child);
 		}
 
 		void SetAt(std::uint32_t a_idx, NiAVObject* a_child, NiPointer<NiAVObject>& a_avObject)  // 40
 		{
 			using SetAt = void (NiNode::*)(std::uint32_t, NiAVObject*, NiPointer<NiAVObject>&);
-			REL::RelocateVirtual<SetAt>(0x41, 0x43, this, a_idx, a_child, a_avObject);
+			REL::RelocateVirtual<SetAt>(0x40, 0x43, this, a_idx, a_child, a_avObject);
 		}
 
 		void UpdateUpwardPass(NiUpdateData& a_data)  // 42
 		{
 			REL::RelocateVirtual<decltype(&NiNode::UpdateUpwardPass)>(0x42, 0x45, this, a_data);
 		}
+#endif
 
 		F4_HEAP_REDEFINE_ALIGNED_NEW(NiNode);
 

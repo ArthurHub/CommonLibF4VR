@@ -258,7 +258,7 @@ namespace RE
 		void SetPerkToAdd(BGSPerk* a_perk)
 		{
 			using func_t = decltype(&TESObjectBOOK::SetPerkToAdd);
-			static REL::Relocation<func_t> func{ REL::ID(472219) };
+			static REL::Relocation<func_t> func{ REL::VariantID(472219, 0, 0x31CA20) };
 			return func(this, a_perk);
 		}
 

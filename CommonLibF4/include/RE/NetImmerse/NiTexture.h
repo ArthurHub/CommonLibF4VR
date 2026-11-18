@@ -41,7 +41,7 @@ namespace RE
 		static NiTexture* Create(RE::BSResourceNiBinaryStream* stream, const char* texturePath, bool isDDX, bool isSRGB, bool allowDegrade)
 		{
 			using func_t = NiTexture* (*)(RE::BSResourceNiBinaryStream* stream, const char* texturePath, bool isDDX, bool isSRGB, bool allowDegrade);
-			static REL::Relocation<func_t> func{ REL::ID(964969) };
+			static REL::Relocation<func_t> func{ REL::VariantID(964969, 0, 0x1C243B0) };
 			return func(stream, texturePath, isDDX, isSRGB, allowDegrade);
 		}
 

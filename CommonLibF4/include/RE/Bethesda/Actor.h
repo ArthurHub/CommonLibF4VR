@@ -494,6 +494,8 @@ namespace RE
 	static_assert(offsetof(MiddleHighProcessData, equippedItemsLock) == 0x288);
 	static_assert(offsetof(MiddleHighProcessData, equippedItems) == 0x290);
 	static_assert(offsetof(MiddleHighProcessData, clothExtraDataCache) == 0x2A8);
+	// PlayerCharacter::GetLinearVelocity (0xDC80F0) reads the controller at middleHigh + 0x3E8.
+	static_assert(offsetof(MiddleHighProcessData, charController) == 0x3E8);
 #else
 	static_assert(sizeof(MiddleHighProcessData) == 0x4C0);
 #endif
@@ -570,7 +572,7 @@ namespace RE
 		bool IsWeaponSubgraphFinishedLoading(const Actor& a_actor)
 		{
 			using func_t = decltype(&AIProcess::IsWeaponSubgraphFinishedLoading);
-			static REL::Relocation<func_t> func{ REL::RelocationID(320183, 2231757) };
+			static REL::Relocation<func_t> func{ REL::VariantID(320183, 2231757, 0xE8D010) };
 			return func(this, a_actor);
 		}
 
@@ -645,7 +647,7 @@ namespace RE
 		TESPackage* GetPackageThatIsRunning()
 		{
 			using func_t = decltype(&AIProcess::GetPackageThatIsRunning);
-			static REL::Relocation<func_t> func{ REL::ID(148295) };
+			static REL::Relocation<func_t> func{ REL::VariantID(148295, 0, 0xE7E9B0) };
 			return func(this);
 		}
 
@@ -793,7 +795,7 @@ namespace RE
 		static constexpr auto RTTI{ RTTI::ActorState };
 		static constexpr auto VTABLE{ VTABLE::ActorState };
 
-		// add
+		// add (FO4VR: one slot higher, after IMovementState::DoGetVRMoveModeFlag)
 		virtual bool            SetWeaponMagicDrawn(bool a_drawn);                // 21
 		virtual bool            SetWeaponState(WEAPON_STATE a_state);             // 22
 		virtual bool            DoSetSitSleepState(SIT_SLEEP_STATE a_state) = 0;  // 23
@@ -805,6 +807,14 @@ namespace RE
 
 		// members
 		std::uint32_t     moveMode: 14;            // 08:00
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+		// FO4VR has one more movement bit here, so every field after it sits one bit higher
+		// than the flat position in its comment: flyState is 08:15, headTracking 0C:00,
+		// weaponState 0C:02, gunState 0C:15. Read from Fallout4VR.exe: SetWeaponState 0xE77090
+		// (mask 0x1C), the gun state setter 0xE77100 (mask 0x78000), and the readers of
+		// flyState, lifeState, knockState, stance and interactingState, each one bit up.
+		std::uint32_t vrMoveModeFlag: 1;  // 08:14
+#endif
 		std::uint32_t     flyState: 3;             // 08:14
 		std::uint32_t     lifeState: 4;            // 08:17
 		std::uint32_t     knockState: 4;           // 08:21
@@ -948,7 +958,13 @@ namespace RE
 		virtual bool                 PutActorOnMountQuick();                                                                                                                                                             // 0CE
 		virtual void                 Update(float a_delta);                                                                                                                                                              // 0CF
 		virtual void                 UpdateNoAI(float);                                                                                                                                                                  // 0D0
-		virtual void                 UpdateMotionDrivenState();                                                                                                                                                          // 0D1
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+		// FO4VR has three more virtuals in this class: here, after ApplyPerksFromBase and
+		// after SetSneaking. The flat slot numbers in the comments below are therefore one,
+		// two and then three too low for FO4VR. Their parameters are not mapped.
+		virtual void VRUnk0D1();  // VR 0D1 (0xDCD200)
+#endif
+		virtual void                 UpdateMotionDrivenState();                                                                                                                                                        // 0D1
 		virtual void                 UpdateCharacterControllerSimulationSettings(bhkCharacterController& a_charController);                                                                                              // 0D2
 		virtual void                 PotentiallyFixRagdollState();                                                                                                                                                       // 0D3
 		virtual void                 UpdateNonRenderSafe(float);                                                                                                                                                         // 0D4
@@ -1009,7 +1025,10 @@ namespace RE
 		virtual bool                 HasPerkEntries(std::uint8_t a_entryPoint) const;                                                                                                                                    // 10B
 		virtual void                 ForEachPerkEntry(std::uint8_t a_entryPoint, PerkEntryVisitor& a_visitor) const;                                                                                                     // 10C
 		virtual void                 ApplyPerksFromBase();                                                                                                                                                               // 10D
-		virtual void                 StartPowerAttackCoolDown() { return; }                                                                                                                                              // 10E
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+		virtual void VRUnk10F();  // VR 10F (0xDF75D0)
+#endif
+		virtual void                 StartPowerAttackCoolDown() { return; }                                                                                                                                            // 10E
 		virtual bool                 IsPowerAttackCoolingDown() const { return false; }                                                                                                                                  // 10F
 		virtual void                 HandleHealthDamage(Actor* a_attacker, float a_damage);                                                                                                                              // 110
 		virtual bool                 QSpeakingDone() const;                                                                                                                                                              // 111
@@ -1028,7 +1047,10 @@ namespace RE
 		virtual bool                 CalculateCachedOwnerIsUndead() const;                                                                                                                                               // 11E
 		virtual bool                 CalculateCachedOwnerIsNPC() const;                                                                                                                                                  // 11F
 		virtual bool                 SetSneaking(bool a_sneaking);                                                                                                                                                       // 120
-		virtual void                 ResetHavokPhysics();                                                                                                                                                                // 121
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
+		virtual void VRUnk123();  // VR 123 (0xE09400)
+#endif
+		virtual void                 ResetHavokPhysics();                                                                                                                                                              // 121
 		virtual bool                 ShouldDoCharacterUpdate() const { return true; }                                                                                                                                    // 122
 		virtual bool                 GetAnimationCanBeInterpolated() const;                                                                                                                                              // 123
 		virtual const BSFixedString& GetResponseString() const;                                                                                                                                                          // 124
@@ -1064,7 +1086,7 @@ namespace RE
 		void ClearAttackStates()
 		{
 			using func_t = decltype(&Actor::ClearAttackStates);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1525555, 2229773) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1525555, 2229773, 0xDCEB40) };
 			return func(this);
 		}
 
@@ -1176,7 +1198,7 @@ namespace RE
 		bool GetOfferBarter()
 		{
 			using func_t = decltype(&Actor::GetOfferBarter);
-			static REL::Relocation<func_t> func{ REL::ID(1482717) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1482717, 0, 0xDE7BB0) };
 			return func(this);
 		}
 
@@ -1287,7 +1309,7 @@ namespace RE
 		void RemovePerk(BGSPerk* a_perk)
 		{
 			using func_t = decltype(&Actor::RemovePerk);
-			static REL::Relocation<func_t> func{ REL::ID(1316475) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1316475, 0, 0xDF7000) };
 			return func(this, a_perk);
 		}
 

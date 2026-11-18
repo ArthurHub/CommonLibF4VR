@@ -29,6 +29,17 @@ namespace RE
 		static constexpr auto VTABLE{ VTABLE::BSGeometry };
 		static constexpr auto Ni_RTTI{ Ni_RTTI::BSGeometry };
 
+		// Address Library ID of BSGeometry's UpdateWorldData (FO4VR 0x141C31C10).
+		// See NiAVObject::VR_UpdateWorldDataSlot.
+		static constexpr REL::ID UpdateWorldDataID{ 551661 };
+
+		/// True when FO4VR's BSGeometry UpdateWorldData starts with the expected code.
+		[[nodiscard]] static bool VRCodeMatches()
+		{
+			static constexpr std::uint8_t code[]{ 0x40, 0x53, 0x48, 0x83, 0xEC, 0x20 };
+			return REL::code_matches(UpdateWorldDataID.address(), code);
+		}
+
 		BSGeometry();
 		virtual ~BSGeometry();  // NOLINT(modernize-use-override) 00
 

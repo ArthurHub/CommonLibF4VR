@@ -157,14 +157,14 @@ namespace RE
 				bool        a_castShadows)
 			{
 				using func_t = decltype(&Renderer::MainScreen_AddSpotLight);
-				static REL::Relocation<func_t> func{ REL::ID(1056093) };
+				static REL::Relocation<func_t> func{ REL::VariantID(1056093, 0, 0xB006A0) };
 				return func(this, a_translation, a_lookAtPosition, a_lookAtObject, a_fov, a_diffuse, a_radius, a_dimmerVal, a_castShadows);
 			}
 
 			void MainScreen_ClearLights()
 			{
 				using func_t = decltype(&Renderer::MainScreen_ClearLights);
-				static REL::Relocation<func_t> func{ REL::ID(683530) };
+				static REL::Relocation<func_t> func{ REL::VariantID(683530, 0, 0xB00860) };
 				return func(this);
 			}
 
@@ -268,7 +268,7 @@ namespace RE
 			void Offscreen_ClearLights()
 			{
 				using func_t = decltype(&Renderer::Offscreen_ClearLights);
-				static REL::Relocation<func_t> func{ REL::ID(1039253) };
+				static REL::Relocation<func_t> func{ REL::VariantID(1039253, 0, 0xB00F30) };
 				return func(this);
 			}
 
@@ -294,7 +294,7 @@ namespace RE
 			void Offscreen_Set3D(NiAVObject* a_3D)
 			{
 				using func_t = decltype(&Renderer::Offscreen_Set3D);
-				static REL::Relocation<func_t> func{ REL::ID(43983) };
+				static REL::Relocation<func_t> func{ REL::VariantID(43983, 0, 0xB00A50) };
 				return func(this, a_3D);
 			}
 
