@@ -308,14 +308,14 @@ namespace RE
 			RenderTarget       renderTargets[145];       // 0A58
 			DepthStencilTarget depthStencilTargets[18];  // 2588
 #else
-			RenderTarget                   renderTargets[101];       // 0A58
-			DepthStencilTarget             depthStencilTargets[13];  // 1D48
+			RenderTarget       renderTargets[101];       // 0A58
+			DepthStencilTarget depthStencilTargets[13];  // 1D48
 #endif
-			CubeMapRenderTarget            cubeMapRenderTargets[2];  // 2500
-			BSCriticalSection              rendererLock;             // 2580
-			const char*                    className;                // 25A8
-			void*                          instance;                 // 25B0
-			bool                           nvapiEnabled;             // 25B8
+			CubeMapRenderTarget cubeMapRenderTargets[2];  // 2500
+			BSCriticalSection   rendererLock;             // 2580
+			const char*         className;                // 25A8
+			void*               instance;                 // 25B0
+			bool                nvapiEnabled;             // 25B8
 		};
 #if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
 		static_assert(offsetof(RendererData, renderTargets) == 0xA58);

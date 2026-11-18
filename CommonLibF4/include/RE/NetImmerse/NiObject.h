@@ -46,25 +46,25 @@ namespace RE
 		virtual ~NiObject() = default;  // NOLINT(modernize-use-override) 00
 
 		// add
-		virtual const NiRTTI*              GetRTTI() const;                                                                 // 02
-		virtual NiNode*                    IsNode() { return nullptr; }                                                     // 04
-		virtual const NiNode*              IsNode() const { return nullptr; }                                               // 03
-		virtual NiSwitchNode*              IsSwitchNode() { return nullptr; }                                               // 05
-		virtual BSFadeNode*                IsFadeNode() { return nullptr; }                                                 // 06
-		virtual BSMultiBoundNode*          IsMultiBoundNode() { return nullptr; }                                           // 07
-		virtual BSGeometry*                IsGeometry() { return nullptr; }                                                 // 08
-		virtual NiTriStrips*               IsTriStrips() { return nullptr; }                                                // 09
-		virtual BSTriShape*                IsTriShape() { return nullptr; }                                                 // 0A
-		virtual BSDynamicTriShape*         IsDynamicTriShape() { return nullptr; }                                          // 0B
-		virtual BSSegmentedTriShape*       IsSegmentedTriShape() { return nullptr; }                                        // 0C
-		virtual BSSubIndexTriShape*        IsSubIndexTriShape() { return nullptr; }                                         // 0D
-		virtual NiGeometry*                IsNiGeometry() { return nullptr; }                                               // 0E
-		virtual NiTriBasedGeom*            IsNiTriBasedGeom() { return nullptr; }                                           // 0F
-		virtual NiTriShape*                IsNiTriShape() { return nullptr; }                                               // 10
-		virtual NiParticles*               IsParticlesGeom() { return nullptr; }                                            // 11
-		virtual NiParticleSystem*          IsParticleSystem() { return nullptr; }                                           // 12
-		virtual BSLines*                   IsLinesGeom() { return nullptr; }                                                // 13
-		virtual NiLight*                   IsLight() { return nullptr; }                                                    // 14
+		virtual const NiRTTI*        GetRTTI() const;                           // 02
+		virtual NiNode*              IsNode() { return nullptr; }               // 04
+		virtual const NiNode*        IsNode() const { return nullptr; }         // 03
+		virtual NiSwitchNode*        IsSwitchNode() { return nullptr; }         // 05
+		virtual BSFadeNode*          IsFadeNode() { return nullptr; }           // 06
+		virtual BSMultiBoundNode*    IsMultiBoundNode() { return nullptr; }     // 07
+		virtual BSGeometry*          IsGeometry() { return nullptr; }           // 08
+		virtual NiTriStrips*         IsTriStrips() { return nullptr; }          // 09
+		virtual BSTriShape*          IsTriShape() { return nullptr; }           // 0A
+		virtual BSDynamicTriShape*   IsDynamicTriShape() { return nullptr; }    // 0B
+		virtual BSSegmentedTriShape* IsSegmentedTriShape() { return nullptr; }  // 0C
+		virtual BSSubIndexTriShape*  IsSubIndexTriShape() { return nullptr; }   // 0D
+		virtual NiGeometry*          IsNiGeometry() { return nullptr; }         // 0E
+		virtual NiTriBasedGeom*      IsNiTriBasedGeom() { return nullptr; }     // 0F
+		virtual NiTriShape*          IsNiTriShape() { return nullptr; }         // 10
+		virtual NiParticles*         IsParticlesGeom() { return nullptr; }      // 11
+		virtual NiParticleSystem*    IsParticleSystem() { return nullptr; }     // 12
+		virtual BSLines*             IsLinesGeom() { return nullptr; }          // 13
+		virtual NiLight*             IsLight() { return nullptr; }              // 14
 #if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
 		// FO4VR has two more casts here, so every slot from here on is two higher than the flat
 		// number in its comment (NiObject ends at 29). Only NiPointLight and NiSpotLight
@@ -72,7 +72,10 @@ namespace RE
 		virtual NiPointLight*       IsPointLight() { return nullptr; }        // VR 16
 		virtual const NiPointLight* IsPointLight() const { return nullptr; }  // VR 15
 #endif
-		virtual bhkNiCollisionObject*      IsBhkNiCollisionObject() { return nullptr; }                                     // 15
+		virtual bhkNiCollisionObject* IsBhkNiCollisionObject()
+		{
+			return nullptr;
+		}                                                                                                                   // 15
 		virtual bhkBlendCollisionObject*   IsBhkBlendCollisionObject() { return nullptr; }                                  // 16
 		virtual bhkRigidBody*              IsBhkRigidBody() { return nullptr; }                                             // 17
 		virtual bhkLimitedHingeConstraint* IsBhkLimitedHingeConstraint() { return nullptr; }                                // 18
