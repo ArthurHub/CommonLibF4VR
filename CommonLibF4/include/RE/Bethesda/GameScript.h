@@ -20,9 +20,6 @@
 
 namespace RE
 {
-	template <class F>
-	using BSTThreadScrapFunction = std::function<F>;
-
 	namespace BSScript
 	{
 		class IStore;

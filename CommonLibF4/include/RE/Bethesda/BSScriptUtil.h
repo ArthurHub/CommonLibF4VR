@@ -469,6 +469,15 @@ namespace RE::BSScript
 		}
 	}
 
+	/**
+	 * A script object held by smart pointer, as a native function takes a Papyrus ScriptObject: the base ScriptObject type.
+	 */
+	template <detail::vmobject_ptr T>
+	[[nodiscard]] std::optional<TypeInfo> GetTypeInfo()
+	{
+		return GetTypeInfo<typename std::remove_cv_t<T>::element_type>();
+	}
+
 	template <detail::vmvariable T>
 	[[nodiscard]] std::optional<TypeInfo> GetTypeInfo()
 	{
@@ -1278,8 +1287,68 @@ namespace RE::BSScript
 			}(std::make_index_sequence<size>{});
 			return result;
 		}
+
+#if defined(ENABLE_FALLOUT_F4) || defined(ENABLE_FALLOUT_VR)
+		using ScrapArgumentsFunction = msvc::function<bool(BSScrapArray<Variable>&)>;
+
+		/**
+		 * The arguments of a Papyrus call on OG and VR, in the arguments callable the game builds itself: C++ can't build
+		 * one in the old MSVC std::function layout. The game's callable copies the packed array out of the VM array held
+		 * here, and the VM calls it before the dispatch returns, so this only has to outlive the call.
+		 */
+		class ScrapFunctionArguments
+		{
+		public:
+			template <class... Args>
+			explicit ScrapFunctionArguments(IVirtualMachine& a_vm, Args&&... a_args) :
+				_vm(std::addressof(a_vm))
+			{
+				_packed = PackVariables(std::forward<Args>(a_args)...);
+				_wrapper = new ArrayWrapper<Variable>(_packed, a_vm);
+			}
+
+			ScrapFunctionArguments(const ScrapFunctionArguments&) = delete;
+			ScrapFunctionArguments& operator=(const ScrapFunctionArguments&) = delete;
+
+			~ScrapFunctionArguments() { delete _wrapper; }
+
+			/**
+			 * BSCore::CreateThreadScrapFunction: wraps the game's lambda, which captures { array, vm } (the first 0x10
+			 * bytes here), in a callable allocated from the calling thread's scrap heap.
+			 */
+			[[nodiscard]] ScrapArgumentsFunction Get()
+			{
+				using func_t = ScrapArgumentsFunction (*)(ScrapFunctionArguments&);
+				static REL::Relocation<func_t> func{ REL::ID(69733) };
+				return func(*this);
+			}
+
+		private:
+			// members
+			ArrayWrapper<Variable>* _wrapper{ nullptr };  // 00
+			IVirtualMachine*        _vm{ nullptr };       // 08
+			BSScrapArray<Variable>  _packed;              // 10
+		};
+
+		/**
+		 * Call the IVirtualMachine virtual in vtable slot SLOT with the OG / VR arguments callable. Needed when the build
+		 * includes NG, whose declared signatures take std::function; the parameters are references either way, so only the
+		 * declared type differs.
+		 */
+		template <std::size_t SLOT, class... Params>
+		bool CallScrapDispatch(IVirtualMachine& a_vm, Params... a_params)
+		{
+			using func_t = bool (*)(IVirtualMachine*, Params...);
+			const auto vtable = *reinterpret_cast<func_t* const*>(std::addressof(a_vm));
+			return vtable[SLOT](std::addressof(a_vm), a_params...);
+		}
+#endif
 	}
 
+	/**
+	 * Call a global Papyrus function with the given arguments, which must match its Papyrus declaration. Returns whether the
+	 * call was queued; a_callback (may be null) receives the result.
+	 */
 	template <class... Args>
 	bool IVirtualMachine::DispatchStaticCall(
 		const BSFixedString&                          a_objName,
@@ -1287,6 +1356,21 @@ namespace RE::BSScript
 		const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
 		Args... a_args)
 	{
+#if defined(ENABLE_FALLOUT_F4) || defined(ENABLE_FALLOUT_VR)
+#	ifdef ENABLE_FALLOUT_NG
+		if (!REL::Module::IsNG())
+#	endif
+		{
+			detail::ScrapFunctionArguments arguments{ *this, a_args... };
+#	ifdef ENABLE_FALLOUT_NG
+			return detail::CallScrapDispatch<0x2C, const BSFixedString&, const BSFixedString&, const detail::ScrapArgumentsFunction&, const BSTSmartPointer<IStackCallbackFunctor>&>(
+				*this, a_objName, a_funcName, arguments.Get(), a_callback);
+#	else
+			return DispatchStaticCall(a_objName, a_funcName, arguments.Get(), a_callback);
+#	endif
+		}
+#endif
+#ifdef ENABLE_FALLOUT_NG
 		return DispatchStaticCall(
 			a_objName,
 			a_funcName,
@@ -1295,8 +1379,13 @@ namespace RE::BSScript
 				return true;
 			},
 			a_callback);
+#endif
 	}
 
+	/**
+	 * Call a Papyrus function on the script a_objName bound to the object of a_objHandle, with the given arguments, which
+	 * must match its Papyrus declaration. Returns whether the call was queued; a_callback (may be null) receives the result.
+	 */
 	template <class... Args>
 	bool IVirtualMachine::DispatchMethodCall(
 		std::uint64_t                                 a_objHandle,
@@ -1305,6 +1394,21 @@ namespace RE::BSScript
 		const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
 		Args... a_args)
 	{
+#if defined(ENABLE_FALLOUT_F4) || defined(ENABLE_FALLOUT_VR)
+#	ifdef ENABLE_FALLOUT_NG
+		if (!REL::Module::IsNG())
+#	endif
+		{
+			detail::ScrapFunctionArguments arguments{ *this, a_args... };
+#	ifdef ENABLE_FALLOUT_NG
+			return detail::CallScrapDispatch<0x2E, std::uint64_t, const BSFixedString&, const BSFixedString&, const detail::ScrapArgumentsFunction&, const BSTSmartPointer<IStackCallbackFunctor>&>(
+				*this, a_objHandle, a_objName, a_funcName, arguments.Get(), a_callback);
+#	else
+			return DispatchMethodCall(a_objHandle, a_objName, a_funcName, arguments.Get(), a_callback);
+#	endif
+		}
+#endif
+#ifdef ENABLE_FALLOUT_NG
 		return DispatchMethodCall(
 			a_objHandle,
 			a_objName,
@@ -1314,5 +1418,6 @@ namespace RE::BSScript
 				return true;
 			},
 			a_callback);
+#endif
 	}
 }

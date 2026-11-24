@@ -25,11 +25,21 @@
 #include "RE/Bethesda/BSTSmartPointer.h"
 #include "RE/Bethesda/BSTTuple.h"
 #include "RE/Bethesda/MemoryManager.h"
+#include "RE/msvc/functional.h"
 
 namespace RE
 {
+	// The game's std::function, which the VM takes its argument and filter callables as. NG was built with a newer MSVC
+	// whose std::function matches ours; OG and VR were built with an older one, 0x20 bytes with its proxy at 0x18, which
+	// std::function would hand them at the wrong offset. A build that includes NG keeps std::function in the signatures,
+	// so the variadic DispatchStaticCall / DispatchMethodCall below reach OG and VR through the vtable slot instead.
+#ifdef ENABLE_FALLOUT_NG
 	template <class F>
 	using BSTThreadScrapFunction = std::function<F>;
+#else
+	template <class F>
+	using BSTThreadScrapFunction = msvc::function<F>;
+#endif
 
 	namespace BSScript
 	{

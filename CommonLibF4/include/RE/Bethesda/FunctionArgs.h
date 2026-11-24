@@ -23,78 +23,27 @@ SOFTWARE.
 */
 
 #pragma once
-#include <RE/msvc/functional.h>
+#include "RE/Bethesda/BSScriptUtil.h"
 
 namespace Papyrus
 {
 	template <class F>
 	using BSTThreadScrapFunctionOG = RE::msvc::function<F>;  // Used by OG/VR for DispatchMethod calls
 
-	namespace detail
-	{
-		class FunctionArgsBase
-		{
-		public:
-			FunctionArgsBase() = delete;
-
-			FunctionArgsBase(RE::BSScript::IVirtualMachine* a_vm) :
-				args(nullptr), vm(a_vm) {}
-
-			/*
-            bool operator()(RE::BSScrapArray<RE::BSScript::Variable>& a_args)
-            {
-                args->GetArrayCopy(a_args, *vm);
-                return true;
-            }
-            */
-
-		protected:
-			// members
-			RE::BSScript::ArrayWrapper<RE::BSScript::Variable>* args;  // 00
-			RE::BSScript::IVirtualMachine*                      vm;    // 08
-		};
-
-		static_assert(sizeof(FunctionArgsBase) == 0x10);
-
-		inline BSTThreadScrapFunctionOG<bool(RE::BSScrapArray<RE::BSScript::Variable>&)> CreateThreadScrapFunction(
-			FunctionArgsBase& a_args)
-		{
-			using func_t = decltype(&detail::CreateThreadScrapFunction);
-			REL::Relocation<func_t> func{ REL::ID(69733) };
-			return func(a_args);
-		}
-	}
-
+#if defined(ENABLE_FALLOUT_F4) || defined(ENABLE_FALLOUT_VR)
+	/**
+	 * The arguments of a Papyrus call on OG and VR, as the game's own arguments callable. The variadic
+	 * IVirtualMachine::DispatchStaticCall / DispatchMethodCall build these themselves; this is for calling the virtuals directly.
+	 */
 	template <class... Args>
-	class FunctionArgs : public detail::FunctionArgsBase
+	class FunctionArgs : public RE::BSScript::detail::ScrapFunctionArguments
 	{
-		RE::BSScrapArray<RE::BSScript::Variable> scrap;
-
 	public:
-		FunctionArgs() = delete;
-		FunctionArgs(const FunctionArgs&) = delete;
-		FunctionArgs& operator=(const FunctionArgs&) = delete;
-		FunctionArgs(FunctionArgs&&) = delete;
-		FunctionArgs& operator=(FunctionArgs&&) = delete;
-
 		FunctionArgs(RE::BSScript::IVirtualMachine* a_vm, Args... a_args) :
-			FunctionArgsBase(a_vm)
-		{
-			scrap = RE::BSScript::detail::PackVariables(a_args...);
-			args = new RE::BSScript::ArrayWrapper<RE::BSScript::Variable>(scrap, *vm);
-		}
+			ScrapFunctionArguments(*a_vm, a_args...)
+		{}
 
-		BSTThreadScrapFunctionOG<bool(RE::BSScrapArray<RE::BSScript::Variable>&)> get()
-		{
-			return detail::CreateThreadScrapFunction(*this);
-		}
-
-		~FunctionArgs()
-		{
-			if (args != nullptr)
-				delete args;
-		}
+		BSTThreadScrapFunctionOG<bool(RE::BSScrapArray<RE::BSScript::Variable>&)> get() { return Get(); }
 	};
-
-	static_assert(sizeof(FunctionArgs<std::monostate>) == 0x30);
+#endif
 }
