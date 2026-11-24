@@ -39,12 +39,25 @@ namespace RE
 			bool TryPop(BSScript::Internal::SuspendedStack& a_message) override;         // 04
 
 			// members
-			alignas(0x80) char queueBuffer[7168];                                                           // 0010
+#ifdef ENABLE_FALLOUT_VR
+			// VR's queue has 0x200 bytes less buffer: its VM constructor (0x1426FF240) puts the lockless queue at
+			// +0x1A80 of each queue, and the two queues 0x1B00 apart, so every VirtualMachine member after them is
+			// 0x400 below its flat offset
+			alignas(0x80) char queueBuffer[6656];                                                           // 0080
+			BSTLocklessQueue::ObjMultiProdCons<BSScript::Internal::SuspendedStack, 128, 0>* locklessQueue;  // 1A80
+#else
+			alignas(0x80) char queueBuffer[7168];                                                           // 0080
 			BSTLocklessQueue::ObjMultiProdCons<BSScript::Internal::SuspendedStack, 128, 0>* locklessQueue;  // 1C80
+#endif
 		};
+#ifdef ENABLE_FALLOUT_VR
+		static_assert(sizeof(BSTCommonStaticMessageQueue_SuspendedStack_128) == 0x1B00);
+		static_assert(offsetof(BSTCommonStaticMessageQueue_SuspendedStack_128, locklessQueue) == 0x1A80);
+#else
 		static_assert(sizeof(BSTCommonStaticMessageQueue_SuspendedStack_128) == 0x1D00);
-		static_assert(offsetof(BSTCommonStaticMessageQueue_SuspendedStack_128, queueBuffer) == 0x80);
 		static_assert(offsetof(BSTCommonStaticMessageQueue_SuspendedStack_128, locklessQueue) == 0x1C80);
+#endif
+		static_assert(offsetof(BSTCommonStaticMessageQueue_SuspendedStack_128, queueBuffer) == 0x80);
 	}
 
 	namespace BSScript
@@ -315,7 +328,21 @@ namespace RE
 				ReadableTypeTable                                          readableTypeTable;           // C038
 				std::byte                                                  padC040[0xC080 - 0xC040];    // C040
 			};
+#ifdef ENABLE_FALLOUT_VR
+			// the member offsets above are flat ones: from suspendQueue2 on, VR's are 0x400 lower (see
+			// BSTCommonStaticMessageQueue_SuspendedStack_128), read off Fallout4VR.exe 1.2.72: its own accesses of
+			// each, and the 0xBC80 the game allocates for the VM
+			static_assert(offsetof(VirtualMachine, suspendQueue2) == 0x9E00);
+			static_assert(offsetof(VirtualMachine, runningStacksLock) == 0xB958);
+			static_assert(offsetof(VirtualMachine, frozenStacksLock) == 0xB9C4);
+			static_assert(offsetof(VirtualMachine, freezeState) == 0xB9F4);
+			static_assert(offsetof(VirtualMachine, attachedScriptsLock) == 0xB9F8);
+			static_assert(offsetof(VirtualMachine, structsLock) == 0xBA58);
+			static_assert(offsetof(VirtualMachine, readableTypeTable) == 0xBC38);
+			static_assert(sizeof(VirtualMachine) == 0xBC80);
+#else
 			static_assert(sizeof(VirtualMachine) == 0xC080);
+#endif
 		}
 	}
 }

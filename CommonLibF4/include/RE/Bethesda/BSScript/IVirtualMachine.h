@@ -101,8 +101,8 @@ namespace RE
 			virtual bool                                     GetScriptStructType(const BSFixedString& a_structTypeName, BSTSmartPointer<StructTypeInfo>& a_structType) = 0;                                                                                                                                                                                 // 13
 			virtual bool                                     GetScriptStructTypeNoLoad(const BSFixedString& a_structTypeName, BSTSmartPointer<StructTypeInfo>& a_structType) const = 0;                                                                                                                                                                     // 14
 			virtual bool                                     GetChildStructTypes(const BSFixedString& a_parentObjectName, BSTObjectArena<BSFixedString>& a_structTypes) const = 0;                                                                                                                                                                          // 15
-			virtual bool                                     CreateObject(const BSFixedString& a_objectTypeName, const BSTScrapHashMap<BSFixedString, Variable>& a_properties, BSTSmartPointer<Object>& a_newObj) = 0;                                                                                                                                      // 16
 			virtual bool                                     CreateObject(const BSFixedString& a_objectTypeName, BSTSmartPointer<Object>& a_newObj) = 0;                                                                                                                                                                                                    // 17
+			virtual bool                                     CreateObject(const BSFixedString& a_objectTypeName, const BSTScrapHashMap<BSFixedString, Variable>& a_properties, BSTSmartPointer<Object>& a_newObj) = 0;                                                                                                                                      // 16
 			virtual bool                                     CreateStruct(const BSFixedString& a_structTypeName, BSTSmartPointer<Struct>& a_newStruct) = 0;                                                                                                                                                                                                 // 18
 			virtual bool                                     CreateArray(TypeInfo::RawType a_elementType, const BSFixedString& a_elementObjectTypeName, std::uint32_t a_elementCount, BSTSmartPointer<Array>& a_newArray) = 0;                                                                                                                              // 1A
 			virtual bool                                     CreateArray(const TypeInfo& a_type, std::uint32_t a_elementCount, BSTSmartPointer<Array>& a_newArray) = 0;                                                                                                                                                                                     // 19
@@ -183,6 +183,17 @@ namespace RE
 				const BSFixedString&                          a_funcName,
 				const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
 				BSScrapArray<Variable>                        a_args);
+
+			template <class... Args>
+			bool SendCustomEvent(
+				const BSTSmartPointer<Object>& a_sender,
+				const BSFixedString&           a_eventName,
+				Args... a_args);
+
+			bool SendCustomEventPacked(
+				const BSTSmartPointer<Object>& a_sender,
+				const BSFixedString&           a_eventName,
+				BSScrapArray<Variable>         a_args);
 
 			void PostError(std::string_view a_msg, std::uint32_t a_stackID, ErrorLogger::Severity a_severity)
 			{

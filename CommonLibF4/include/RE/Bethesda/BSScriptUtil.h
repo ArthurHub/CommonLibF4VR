@@ -1214,7 +1214,12 @@ namespace RE::BSScript
 					std::index_sequence_for<Args...>{});
 			};
 
-			if constexpr (!std::same_as<R, void>) {
+			if (super::isLatent) {
+				// a latent function's result reaches the script later, through ReturnFromLatent; the game's
+				// NativeFunctionBase::Call takes a true bool here as "the call started", and aborts the call on any other
+				invoke();
+				a_retVal = true;
+			} else if constexpr (!std::same_as<R, void>) {
 				PackVariable(a_retVal, invoke());
 			} else {
 				invoke();
@@ -1454,6 +1459,41 @@ namespace RE::BSScript
 			},
 			a_callback);
 #endif
+	}
+
+	/**
+	 * Send a CustomEvent of a script, as its ScriptObject.SendCustomEvent does: each script that registered for it on
+	 * a_sender gets it, with the arguments packed in a_args (its Var[]). a_eventName is the name the Papyrus compiler
+	 * writes, the declaring script and the event joined by '_' ("MyMod:Sender_OnThing"), not the bare event name. It is
+	 * the game's own native function, which takes the arguments by value and releases them itself. OG and VR only: false
+	 * on NG, and with no sender.
+	 */
+	inline bool IVirtualMachine::SendCustomEventPacked(
+		const BSTSmartPointer<Object>& a_sender,
+		const BSFixedString&           a_eventName,
+		BSScrapArray<Variable>         a_args)
+	{
+		if (!a_sender || REL::Module::IsNG()) {
+			return false;
+		}
+		const ArrayWrapper<Variable> arguments{ a_args, *this };
+		using func_t = void (*)(IVirtualMachine*, std::uint32_t, Object*, const BSFixedString&, ArrayWrapper<Variable>);
+		static REL::Relocation<func_t> func{ REL::ID(1229796) };
+		func(this, 0, a_sender.get(), a_eventName, arguments);
+		return true;
+	}
+
+	/**
+	 * Send a CustomEvent of a script with the given arguments, which must match the event's declaration (see
+	 * SendCustomEventPacked).
+	 */
+	template <class... Args>
+	bool IVirtualMachine::SendCustomEvent(
+		const BSTSmartPointer<Object>& a_sender,
+		const BSFixedString&           a_eventName,
+		Args... a_args)
+	{
+		return SendCustomEventPacked(a_sender, a_eventName, detail::PackVariables(a_args...));
 	}
 
 	/**
