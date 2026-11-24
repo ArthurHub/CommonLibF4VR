@@ -165,6 +165,25 @@ namespace RE
 				const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
 				Args... a_args);
 
+			bool DispatchStaticCallPacked(
+				const BSFixedString&                          a_objName,
+				const BSFixedString&                          a_funcName,
+				const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
+				BSScrapArray<Variable>                        a_args);
+
+			bool DispatchMethodCallPacked(
+				std::uint64_t                                 a_objHandle,
+				const BSFixedString&                          a_objName,
+				const BSFixedString&                          a_funcName,
+				const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
+				BSScrapArray<Variable>                        a_args);
+
+			bool DispatchMethodCallPacked(
+				const BSTSmartPointer<Object>&                a_self,
+				const BSFixedString&                          a_funcName,
+				const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
+				BSScrapArray<Variable>                        a_args);
+
 			void PostError(std::string_view a_msg, std::uint32_t a_stackID, ErrorLogger::Severity a_severity)
 			{
 				class ErrorImpl :

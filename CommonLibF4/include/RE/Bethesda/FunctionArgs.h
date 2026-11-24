@@ -40,7 +40,7 @@ namespace Papyrus
 	{
 	public:
 		FunctionArgs(RE::BSScript::IVirtualMachine* a_vm, Args... a_args) :
-			ScrapFunctionArguments(*a_vm, a_args...)
+			ScrapFunctionArguments(*a_vm, RE::BSScript::detail::PackVariables(a_args...))
 		{}
 
 		BSTThreadScrapFunctionOG<bool(RE::BSScrapArray<RE::BSScript::Variable>&)> get() { return Get(); }

@@ -57,8 +57,8 @@ namespace RE
 			Variable*                     GetProperty(const BSFixedString& a_name);
 			[[nodiscard]] const Variable* GetProperty(const BSFixedString& a_name) const;
 
-			// TODO: Figure out if F4_HEAP_REDEFINE_NEW is necessary here
-			//			F4_HEAP_REDEFINE_NEW(Object);
+			// the VM allocates objects on the game's heap, and a BSTSmartPointer that drops the last reference deletes one
+			F4_HEAP_REDEFINE_NEW(Object);
 
 			// members
 			std::uint32_t                   constructed: 1;            // 00:00

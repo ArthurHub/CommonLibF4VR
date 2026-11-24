@@ -14,10 +14,11 @@ namespace RE::BSScript
 			initialized = false;
 		}
 
-		auto lock = reinterpret_cast<std::uintptr_t>(lockStructure) & ~static_cast<std::uintptr_t>(1);
+		// the lock structure's count, as the game's destructor releases it; the pointer's low bit is a flag
+		const auto lock = reinterpret_cast<std::uintptr_t>(lockStructure) & ~static_cast<std::uintptr_t>(1);
 		if (lock) {
-			stl::atomic_ref l{ lock };
-			--l;
+			stl::atomic_ref count{ *reinterpret_cast<std::uint32_t*>(lock) };
+			--count;
 		}
 	}
 	ObjectTypeInfo* Object::GetTypeInfo()

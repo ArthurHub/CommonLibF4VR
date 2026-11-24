@@ -1299,11 +1299,10 @@ namespace RE::BSScript
 		class ScrapFunctionArguments
 		{
 		public:
-			template <class... Args>
-			explicit ScrapFunctionArguments(IVirtualMachine& a_vm, Args&&... a_args) :
-				_vm(std::addressof(a_vm))
+			ScrapFunctionArguments(IVirtualMachine& a_vm, BSScrapArray<Variable> a_packed) :
+				_vm(std::addressof(a_vm)),
+				_packed(std::move(a_packed))
 			{
-				_packed = PackVariables(std::forward<Args>(a_args)...);
 				_wrapper = new ArrayWrapper<Variable>(_packed, a_vm);
 			}
 
@@ -1346,22 +1345,22 @@ namespace RE::BSScript
 	}
 
 	/**
-	 * Call a global Papyrus function with the given arguments, which must match its Papyrus declaration. Returns whether the
-	 * call was queued; a_callback (may be null) receives the result.
+	 * Call a global Papyrus function with the arguments packed in a_args, as PackVariable packs each: for an argument list
+	 * built at runtime. They must match its Papyrus declaration. Returns whether the call was queued; a_callback (may be
+	 * null) receives the result.
 	 */
-	template <class... Args>
-	bool IVirtualMachine::DispatchStaticCall(
+	inline bool IVirtualMachine::DispatchStaticCallPacked(
 		const BSFixedString&                          a_objName,
 		const BSFixedString&                          a_funcName,
 		const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
-		Args... a_args)
+		BSScrapArray<Variable>                        a_args)
 	{
 #if defined(ENABLE_FALLOUT_F4) || defined(ENABLE_FALLOUT_VR)
 #	ifdef ENABLE_FALLOUT_NG
 		if (!REL::Module::IsNG())
 #	endif
 		{
-			detail::ScrapFunctionArguments arguments{ *this, a_args... };
+			detail::ScrapFunctionArguments arguments{ *this, std::move(a_args) };
 #	ifdef ENABLE_FALLOUT_NG
 			return detail::CallScrapDispatch<0x2C, const BSFixedString&, const BSFixedString&, const detail::ScrapArgumentsFunction&, const BSTSmartPointer<IStackCallbackFunctor>&>(
 				*this, a_objName, a_funcName, arguments.Get(), a_callback);
@@ -1375,7 +1374,7 @@ namespace RE::BSScript
 			a_objName,
 			a_funcName,
 			[&](BSScrapArray<Variable>& a_out) {
-				a_out = detail::PackVariables(a_args...);
+				a_out = std::move(a_args);
 				return true;
 			},
 			a_callback);
@@ -1383,23 +1382,23 @@ namespace RE::BSScript
 	}
 
 	/**
-	 * Call a Papyrus function on the script a_objName bound to the object of a_objHandle, with the given arguments, which
-	 * must match its Papyrus declaration. Returns whether the call was queued; a_callback (may be null) receives the result.
+	 * Call a Papyrus function on the script a_objName bound to the object of a_objHandle, with the arguments packed in
+	 * a_args (see DispatchStaticCallPacked). Returns whether the call was queued: false too for an object with no such
+	 * script bound.
 	 */
-	template <class... Args>
-	bool IVirtualMachine::DispatchMethodCall(
+	inline bool IVirtualMachine::DispatchMethodCallPacked(
 		std::uint64_t                                 a_objHandle,
 		const BSFixedString&                          a_objName,
 		const BSFixedString&                          a_funcName,
 		const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
-		Args... a_args)
+		BSScrapArray<Variable>                        a_args)
 	{
 #if defined(ENABLE_FALLOUT_F4) || defined(ENABLE_FALLOUT_VR)
 #	ifdef ENABLE_FALLOUT_NG
 		if (!REL::Module::IsNG())
 #	endif
 		{
-			detail::ScrapFunctionArguments arguments{ *this, a_args... };
+			detail::ScrapFunctionArguments arguments{ *this, std::move(a_args) };
 #	ifdef ENABLE_FALLOUT_NG
 			return detail::CallScrapDispatch<0x2E, std::uint64_t, const BSFixedString&, const BSFixedString&, const detail::ScrapArgumentsFunction&, const BSTSmartPointer<IStackCallbackFunctor>&>(
 				*this, a_objHandle, a_objName, a_funcName, arguments.Get(), a_callback);
@@ -1414,10 +1413,75 @@ namespace RE::BSScript
 			a_objName,
 			a_funcName,
 			[&](BSScrapArray<Variable>& a_out) {
-				a_out = detail::PackVariables(a_args...);
+				a_out = std::move(a_args);
 				return true;
 			},
 			a_callback);
 #endif
+	}
+
+	/**
+	 * Call a Papyrus function on a script object, with the arguments packed in a_args (see DispatchStaticCallPacked).
+	 * Returns whether the call was queued.
+	 */
+	inline bool IVirtualMachine::DispatchMethodCallPacked(
+		const BSTSmartPointer<Object>&                a_self,
+		const BSFixedString&                          a_funcName,
+		const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
+		BSScrapArray<Variable>                        a_args)
+	{
+#if defined(ENABLE_FALLOUT_F4) || defined(ENABLE_FALLOUT_VR)
+#	ifdef ENABLE_FALLOUT_NG
+		if (!REL::Module::IsNG())
+#	endif
+		{
+			detail::ScrapFunctionArguments arguments{ *this, std::move(a_args) };
+#	ifdef ENABLE_FALLOUT_NG
+			return detail::CallScrapDispatch<0x2D, const BSTSmartPointer<Object>&, const BSFixedString&, const detail::ScrapArgumentsFunction&, const BSTSmartPointer<IStackCallbackFunctor>&>(
+				*this, a_self, a_funcName, arguments.Get(), a_callback);
+#	else
+			return DispatchMethodCall(a_self, a_funcName, arguments.Get(), a_callback);
+#	endif
+		}
+#endif
+#ifdef ENABLE_FALLOUT_NG
+		return DispatchMethodCall(
+			a_self,
+			a_funcName,
+			[&](BSScrapArray<Variable>& a_out) {
+				a_out = std::move(a_args);
+				return true;
+			},
+			a_callback);
+#endif
+	}
+
+	/**
+	 * Call a global Papyrus function with the given arguments, which must match its Papyrus declaration. Returns whether the
+	 * call was queued; a_callback (may be null) receives the result.
+	 */
+	template <class... Args>
+	bool IVirtualMachine::DispatchStaticCall(
+		const BSFixedString&                          a_objName,
+		const BSFixedString&                          a_funcName,
+		const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
+		Args... a_args)
+	{
+		return DispatchStaticCallPacked(a_objName, a_funcName, a_callback, detail::PackVariables(a_args...));
+	}
+
+	/**
+	 * Call a Papyrus function on the script a_objName bound to the object of a_objHandle, with the given arguments, which
+	 * must match its Papyrus declaration. Returns whether the call was queued; a_callback (may be null) receives the result.
+	 */
+	template <class... Args>
+	bool IVirtualMachine::DispatchMethodCall(
+		std::uint64_t                                 a_objHandle,
+		const BSFixedString&                          a_objName,
+		const BSFixedString&                          a_funcName,
+		const BSTSmartPointer<IStackCallbackFunctor>& a_callback,
+		Args... a_args)
+	{
+		return DispatchMethodCallPacked(a_objHandle, a_objName, a_funcName, a_callback, detail::PackVariables(a_args...));
 	}
 }
