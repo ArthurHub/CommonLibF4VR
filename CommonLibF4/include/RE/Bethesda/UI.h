@@ -74,7 +74,7 @@ namespace RE
 
 		[[nodiscard]] static UI* GetSingleton()
 		{
-			static REL::Relocation<UI**> singleton{ REL::RelocationID(548587, 2689028) };
+			static REL::Relocation<UI**> singleton{ REL::RelocationID(548587, 2689028) };  // VR: tested
 			return *singleton;
 		}
 

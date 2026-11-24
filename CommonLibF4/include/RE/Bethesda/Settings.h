@@ -397,7 +397,7 @@ namespace RE
 
 		[[nodiscard]] static INIPrefSettingCollection* GetSingleton()
 		{
-			static REL::Relocation<INIPrefSettingCollection**> singleton{ REL::RelocationID(767844, 2703234) };
+			static REL::Relocation<INIPrefSettingCollection**> singleton{ REL::RelocationID(767844, 2703234) };  // VR: tested
 			return *singleton;
 		}
 	};

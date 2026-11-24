@@ -502,7 +502,7 @@ namespace RE
 		bool IsPipboyLightOn()
 		{
 			using func_t = decltype(&PlayerCharacter::IsPipboyLightOn);
-			static REL::Relocation<func_t> func{ REL::ID(426550) };
+			static REL::Relocation<func_t> func{ REL::ID(426550) };  // VR: tested
 			return func(this);
 		}
 
@@ -574,7 +574,7 @@ namespace RE
 		void TogglePipBoyLight(bool a_unk)
 		{
 			using func_t = decltype(&PlayerCharacter::TogglePipBoyLight);
-			static REL::Relocation<func_t> func{ REL::ID(520007) };
+			static REL::Relocation<func_t> func{ REL::ID(520007) };  // VR: tested
 			return func(this, a_unk);
 		}
 

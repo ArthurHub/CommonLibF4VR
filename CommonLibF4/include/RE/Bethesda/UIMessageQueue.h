@@ -14,14 +14,14 @@ namespace RE
 	public:
 		[[nodiscard]] static UIMessageQueue* GetSingleton()
 		{
-			static REL::Relocation<UIMessageQueue**> singleton{ REL::RelocationID(82123, 2689091) };
+			static REL::Relocation<UIMessageQueue**> singleton{ REL::RelocationID(82123, 2689091) };  // VR: tested
 			return *singleton;
 		}
 
 		void AddMessage(const BSFixedString& a_menu, UI_MESSAGE_TYPE a_type)
 		{
 			using func_t = decltype(&UIMessageQueue::AddMessage);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1182019, 2284929) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(1182019, 2284929) };  // VR: tested
 			return func(this, a_menu, a_type);
 		}
 

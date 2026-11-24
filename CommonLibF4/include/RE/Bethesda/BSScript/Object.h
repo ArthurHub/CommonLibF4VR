@@ -43,7 +43,7 @@ namespace RE
 			[[nodiscard]] std::size_t GetHandle() const
 			{
 				using func_t = decltype(&Object::GetHandle);
-				static REL::Relocation<func_t> func{ REL::RelocationID(1452752, 2314431) };
+				static REL::Relocation<func_t> func{ REL::RelocationID(1452752, 2314431) };  // VR: tested
 				return func(this);
 			}
 

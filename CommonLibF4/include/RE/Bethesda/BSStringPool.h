@@ -18,7 +18,7 @@ namespace RE
 			static void release(Entry*& a_entry)
 			{
 				using func_t = decltype(&Entry::release);
-				static REL::Relocation<func_t> func{ REL::RelocationID(1204430, 2268720) };
+				static REL::Relocation<func_t> func{ REL::RelocationID(1204430, 2268720) };  // VR: tested
 				return func(a_entry);
 			}
 

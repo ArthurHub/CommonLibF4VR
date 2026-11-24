@@ -1265,7 +1265,7 @@ namespace RE
 		[[nodiscard]] BGSObjectInstanceT<TESObjectWEAP> GetCurrentWeapon(BGSEquipIndex a_equipIndex)
 		{
 			using func_t = decltype(&Actor::GetCurrentWeapon);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1277201, 0) };  // VR: checked
+			static REL::Relocation<func_t> func{ REL::RelocationID(1277201, 0) };  // VR: tested
 			return func(this, a_equipIndex);
 		}
 
@@ -1478,7 +1478,7 @@ namespace RE
 		void ReEquipAll()
 		{
 			using func_t = decltype(&Actor::ReEquipAll);
-			static REL::Relocation<func_t> func{ REL::RelocationID(461874, 0) };  // VR: checked
+			static REL::Relocation<func_t> func{ REL::RelocationID(461874, 0) };  // VR: tested
 			return func(this);
 		}
 

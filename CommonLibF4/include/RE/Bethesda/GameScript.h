@@ -491,7 +491,7 @@ namespace RE
 
 		[[nodiscard]] static GameVM* GetSingleton()
 		{
-			static REL::Relocation<GameVM**> singleton{ REL::RelocationID(996227, 2689134) };
+			static REL::Relocation<GameVM**> singleton{ REL::RelocationID(996227, 2689134) };  // VR: tested
 			return *singleton;
 		}
 

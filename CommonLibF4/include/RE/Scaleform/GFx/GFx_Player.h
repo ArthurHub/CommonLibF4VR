@@ -586,7 +586,7 @@ namespace RE::Scaleform::GFx
 			bool Invoke(void* a_data, Value* a_result, const char* a_name, const Value* a_args, std::size_t a_numArgs, bool a_isdobj)
 			{
 				using func_t = decltype(&ObjectInterface::Invoke);
-				static REL::Relocation<func_t> func{ REL::RelocationID(655847, 2286101) };
+				static REL::Relocation<func_t> func{ REL::RelocationID(655847, 2286101) };  // VR: tested
 				return func(this, a_data, a_result, a_name, a_args, a_numArgs, a_isdobj);
 			}
 

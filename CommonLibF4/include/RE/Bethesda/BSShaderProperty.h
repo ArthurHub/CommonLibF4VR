@@ -149,7 +149,7 @@ namespace RE
 		void SetMaterial(BSShaderMaterial* a_material, bool a_unique)
 		{
 			using func_t = decltype(&BSShaderProperty::SetMaterial);
-			static REL::Relocation<func_t> func{ REL::ID(706318) };
+			static REL::Relocation<func_t> func{ REL::ID(706318) };  // VR: tested
 			return func(this, a_material, a_unique);
 		}
 

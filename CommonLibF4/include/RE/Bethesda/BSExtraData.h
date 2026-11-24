@@ -1044,7 +1044,7 @@ namespace RE
 		void SetMultiBoundRef(TESObjectREFR* a_ref)
 		{
 			using func_t = decltype(&ExtraDataList::SetMultiBoundRef);
-			static REL::Relocation<func_t> func{ REL::RelocationID(840201, 0) };  // VR: checked
+			static REL::Relocation<func_t> func{ REL::RelocationID(840201, 0) };  // VR: tested
 			return func(this, a_ref);
 		}
 
