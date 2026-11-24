@@ -34,6 +34,7 @@ namespace RE
 	struct hknpWorldCinfo;
 	class bhkIWorldStepListener;
 	class hknpWorld;
+	enum class COL_LAYER : std::uint32_t;
 
 	/// bhkWorld — Bethesda's game-level physics world wrapper.
 	///
@@ -173,4 +174,24 @@ namespace RE
 		std::byte pad[0x180 - 0x10];  // 10
 	};
 	static_assert(sizeof(bhkWorld) == 0x180);
+
+	// The game's helpers for the Havok bodies of a scene graph.
+	namespace bhkUtilFunctions
+	{
+		// Moves the first collision object found under a_child onto a_root.
+		inline void MoveFirstCollisionObjectToRoot(NiAVObject& a_root, NiAVObject* a_child)
+		{
+			using func_t = decltype(&MoveFirstCollisionObjectToRoot);
+			static REL::Relocation<func_t> func{ REL::RelocationID(270518, 0) };  // VR: checked
+			return func(a_root, a_child);
+		}
+
+		// Sets the collision layer of the Havok bodies under a_object.
+		inline void SetLayer(NiAVObject* a_object, COL_LAYER a_layer)
+		{
+			using func_t = decltype(&SetLayer);
+			static REL::Relocation<func_t> func{ REL::RelocationID(715635, 0) };  // VR: checked
+			return func(a_object, a_layer);
+		}
+	}
 }
