@@ -799,7 +799,7 @@ namespace RE
 		[[nodiscard]] static ENUM_FORM_ID GetFormTypeFromString(const char* a_formTypeString)
 		{
 			using func_t = decltype(&TESForm::GetFormTypeFromString);
-			static REL::Relocation<func_t> func{ REL::VariantID(565203, 2193108, 0x15A470) };
+			static REL::Relocation<func_t> func{ REL::VariantID(565203, 2193108, 0x15A470) };  // VR: checked
 			return func(a_formTypeString);
 		}
 
