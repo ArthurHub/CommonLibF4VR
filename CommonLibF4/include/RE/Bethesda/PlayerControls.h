@@ -137,6 +137,22 @@ namespace RE
 	};
 	static_assert(sizeof(HeldStateHandler) == 0x28);
 
+	struct AttackBlockHandler :
+		public HeldStateHandler  // 00
+	{
+	public:
+		static constexpr auto RTTI{ RTTI::AttackBlockHandler };
+		static constexpr auto VTABLE{ VTABLE::AttackBlockHandler };
+
+		// Whether the player is throwing a grenade or a mine right now. Members past HeldStateHandler are not mapped.
+		[[nodiscard]] static bool IsPlayerThrowingWeapon()
+		{
+			using func_t = decltype(&AttackBlockHandler::IsPlayerThrowingWeapon);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1229807, 0) };  // VR: checked
+			return func();
+		}
+	};
+
 	class LookHandler :
 		public PlayerInputHandler
 	{

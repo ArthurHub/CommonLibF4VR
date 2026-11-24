@@ -6,6 +6,18 @@ This is a VR split of CommonLibF4 from [alandtse/CommonLibF4](https://github.com
 3. Multi-targetting while VR speciffic fixes is hard and not worth it at this point (IMHO).
 
 
+## What works on VR
+
+A relocation's line is tagged `// VR: tested` (called in game on VR and seen to work) or `// VR: checked`
+(address and signature read off the VR binary), and untagged when it is unknown on VR.
+[VRAddressCheck](VRAddressCheck/README.md) checks every address against a decrypted Fallout4VR.exe and the VR
+address library, and reports the tags.
+
+VR-only engine pieces with no address-library ID live in `RE/Bethesda/VR*.h`: `VRSettings` (the [VR] settings
+the game reads), `VRWorldData` (the room rotation turning uses), `VRRenderCamera` (the per-eye render camera)
+and `VRHookSites` (call and patch sites mods hook, each with what the unpatched game has there).
+
+
 ## General Requirements
 
 - [Visual Studio Community](https://visualstudio.microsoft.com/vs/preview/)

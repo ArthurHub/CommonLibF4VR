@@ -25,6 +25,22 @@ namespace RE
 			return func(a_actor);
 		}
 
+		// Puts the actor into the power armor frame a_furniture, as entering it does.
+		inline bool SwitchToPowerArmor(Actor& a_actor, TESObjectREFR* a_furniture, bool a_unk)
+		{
+			using func_t = decltype(&SwitchToPowerArmor);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1187476, 0) };  // VR: checked
+			return func(a_actor, a_furniture, a_unk);
+		}
+
+		// Takes the actor out of a loaded power armor frame; a_processType is the engine's PROCESS_TYPE.
+		inline void SwitchFromPowerArmorFurnitureLoaded(Actor& a_actor, std::uint32_t a_processType)
+		{
+			using func_t = decltype(&SwitchFromPowerArmorFurnitureLoaded);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1150710, 0) };  // VR: checked
+			return func(a_actor, a_processType);
+		}
+
 		[[nodiscard]] inline bool PlayerInPowerArmor()
 		{
 			auto PlayerCharacter = PlayerCharacter::GetSingleton();

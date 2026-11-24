@@ -548,6 +548,47 @@ namespace RE
 	class AIProcess
 	{
 	public:
+		void ClearMuzzleFlashes()
+		{
+			using func_t = decltype(&AIProcess::ClearMuzzleFlashes);
+			static REL::Relocation<func_t> func{ REL::RelocationID(53070, 0) };  // VR: checked
+			return func(this);
+		}
+
+		void CreateMuzzleFlash(Projectile* a_projectile, TESObjectREFR* a_shooter)
+		{
+			using func_t = decltype(&AIProcess::CreateMuzzleFlash);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1303576, 0) };  // VR: checked
+			return func(this, a_projectile, a_shooter);
+		}
+
+		// Makes the actor owning this process enter combat with the target, at once; the last actor is passed
+		// null. The engine's own Papyrus SendAssaultAlarm calls it right after Actor::AttackAlarm. Does nothing to
+		// an actor already in combat with the target. Needs the actor's high process data.
+		void EnterCombat(Actor* a_actor, Actor* a_target, Actor* a_unk = nullptr)
+		{
+			using func_t = decltype(&AIProcess::EnterCombat);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1514649, 0) };  // VR: tested
+			return func(this, a_actor, a_target, a_unk);
+		}
+
+		// The actor's cached illumination (HighProcessData +0x490), what the engine's detection formula reads
+		// (GatherDetectionFormulaData) and Actor::CalculateNormalizedLightLevel; 0 without high process data.
+		[[nodiscard]] float GetActorLightLevel() const
+		{
+			using func_t = decltype(&AIProcess::GetActorLightLevel);
+			static REL::Relocation<func_t> func{ REL::RelocationID(898888, 0) };  // VR: tested
+			return func(this);
+		}
+
+		// Copies the graph manager of the process's middle-high data (+0x260) into a_out.
+		void GetAnimationGraphManager(BSTSmartPointer<BSAnimationGraphManager>& a_out) const
+		{
+			using func_t = decltype(&AIProcess::GetAnimationGraphManager);
+			static REL::Relocation<func_t> func{ REL::VariantID(751660, 0, 0xEC5400) };  // VR: checked
+			return func(this, a_out);
+		}
+
 		[[nodiscard]] TESAmmo* GetCurrentAmmo(BGSEquipIndex a_equipIndex) const
 		{
 			using func_t = decltype(&AIProcess::GetCurrentAmmo);
@@ -600,6 +641,24 @@ namespace RE
 			using func_t = decltype(&AIProcess::RequestLoadAnimationsForWeaponChange);
 			static REL::Relocation<func_t> func{ REL::ID(666002) };
 			return func(this, a_actor);
+		}
+
+		// Sets bits of MiddleHighProcessData's 3D update flags (+0x49E), which the process applies on its next update.
+		void Set3DUpdateFlag(RESET_3D_FLAGS a_flags)
+		{
+			using func_t = decltype(&AIProcess::Set3DUpdateFlag);
+			static REL::Relocation<func_t> func{ REL::RelocationID(236542, 0) };  // VR: tested
+			return func(this, a_flags);
+		}
+
+		// Overwrites the actor's cached illumination (see GetActorLightLevel). The engine's lighting refresh owns
+		// the field and rewrites it, so a value set here holds until then: re-apply it every frame to keep it.
+		// Does nothing without high process data.
+		void SetActorLightLevel(float a_level)
+		{
+			using func_t = decltype(&AIProcess::SetActorLightLevel);
+			static REL::Relocation<func_t> func{ REL::VariantID(194422, 0, 0xE9A3C0) };  // VR: tested
+			return func(this, a_level);
 		}
 
 		void SetActorsDetectionEvent(Actor* a_actor, const NiPoint3& a_location, std::int32_t a_soundLevel, TESObjectREFR* a_refr)
@@ -1079,6 +1138,13 @@ namespace RE
 			return func(this, a_perk, a_rank);
 		}
 
+		bool CanThrow(BGSEquipIndex a_equipIndex)
+		{
+			using func_t = decltype(&Actor::CanThrow);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1136501, 0) };  // VR: checked
+			return func(this, a_equipIndex);
+		}
+
 		bool CanUseIdle(TESIdleForm* a_idle) const
 		{
 			using func_t = decltype(&Actor::CanUseIdle);
@@ -1121,6 +1187,13 @@ namespace RE
 			return func(this, a_aimVector);
 		}
 
+		[[nodiscard]] float GetAmmoClipPercentage(BGSEquipIndex a_equipIndex)
+		{
+			using func_t = decltype(&Actor::GetAmmoClipPercentage);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1350255, 0) };  // VR: checked
+			return func(this, a_equipIndex);
+		}
+
 		NiAVObject* GetClosestBone(NiPoint3 a_impactLocation, NiPoint3 a_movementDirection)
 		{
 			using func_t = decltype(&Actor::GetClosestBone);
@@ -1147,6 +1220,14 @@ namespace RE
 			return currentProcess ? currentProcess->GetCurrentAmmo(a_equipIndex) : nullptr;
 		}
 
+		// The loaded ammo count through the actor's process; 0 without one.
+		[[nodiscard]] std::uint32_t GetCurrentAmmoCount(BGSEquipIndex a_equipIndex)
+		{
+			using func_t = decltype(&Actor::GetCurrentAmmoCount);
+			static REL::Relocation<func_t> func{ REL::RelocationID(33890, 0) };  // VR: checked
+			return func(this, a_equipIndex);
+		}
+
 		std::uint32_t GetCurrentCollisionGroup()
 		{
 			using func_t = decltype(&Actor::GetCurrentCollisionGroup);
@@ -1161,11 +1242,40 @@ namespace RE
 			return func(this, a_index, a_fireLocation);
 		}
 
+		[[nodiscard]] BGSObjectInstanceT<TESObjectWEAP> GetCurrentWeapon(BGSEquipIndex a_equipIndex)
+		{
+			using func_t = decltype(&Actor::GetCurrentWeapon);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1277201, 0) };  // VR: checked
+			return func(this, a_equipIndex);
+		}
+
 		float GetDesiredSpeed()
 		{
 			using func_t = decltype(&Actor::GetDesiredSpeed);
 			static REL::Relocation<func_t> func{ REL::RelocationID(106892, 2230410) };
 			return func(this);
+		}
+
+		/**
+		 * The angle in degrees between where the actor faces and the direction to a world point, measured
+		 * horizontally: 0 dead ahead, +/-180 behind, the sign following the engine's yaw. 0 for a point the actor
+		 * stands on. Facing is the actor's own heading (data.angle.z, radians from +Y toward +X), the one the AI
+		 * turns toward a target; Actor::GetEyeVector returns unusable values on VR.
+		 */
+		[[nodiscard]] float GetFacingAngleTo(const NiPoint3& a_point) const
+		{
+			const float dx = a_point.x - data.location.x;
+			const float dy = a_point.y - data.location.y;
+			if (std::abs(dx) < 0.01f && std::abs(dy) < 0.01f) {
+				return 0.0f;
+			}
+			// atan2(x, y), not (y, x), for the engine's zero-along-+Y yaw
+			constexpr float pi = 3.14159265358979f;
+			float           delta = std::fmod(std::atan2(dx, dy) - data.angle.z + pi, 2.0f * pi);
+			if (delta < 0.0f) {
+				delta += 2.0f * pi;
+			}
+			return (delta - pi) * (180.0f / pi);
 		}
 
 		float GetHealthPercent()
@@ -1212,6 +1322,13 @@ namespace RE
 			return func(this, a_perk);
 		}
 
+		[[nodiscard]] BGSEquipIndex GetWeaponEquipIndex(const BGSObjectInstanceT<TESObjectWEAP>& a_weapon)
+		{
+			using func_t = decltype(&Actor::GetWeaponEquipIndex);
+			static REL::Relocation<func_t> func{ REL::RelocationID(652104, 0) };  // VR: checked
+			return func(this, a_weapon);
+		}
+
 		void HandleDefaultAnimationSwitch()
 		{
 			using func_t = decltype(&Actor::HandleDefaultAnimationSwitch);
@@ -1240,6 +1357,13 @@ namespace RE
 			return func(this);
 		}
 
+		// Whether the actor faces the world point within a_halfAngleDegrees to either side (see GetFacingAngleTo).
+		// 180 accepts any facing.
+		[[nodiscard]] bool IsFacing(const NiPoint3& a_point, float a_halfAngleDegrees) const
+		{
+			return a_halfAngleDegrees >= 180.0f || std::abs(GetFacingAngleTo(a_point)) <= a_halfAngleDegrees;
+		}
+
 		bool IsFollowing()
 		{
 			using func_t = decltype(&Actor::IsFollowing);
@@ -1247,10 +1371,19 @@ namespace RE
 			return func(this);
 		}
 
+		// In combat, and the combat group has not ended. Use instead of the IsInCombat virtual, which reads false on
+		// VR and stays true for an ended combat where it works. currentCombatTarget is only meaningful while this holds.
+		[[nodiscard]] bool IsInActiveCombat()
+		{
+			using func_t = decltype(&Actor::IsInActiveCombat);
+			static REL::Relocation<func_t> func{ REL::RelocationID(84790, 0) };  // VR: tested
+			return func(this);
+		}
+
 		[[nodiscard]] bool IsJumping()
 		{
 			using func_t = decltype(&Actor::IsJumping);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1041558, 2229640) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(1041558, 2229640) };  // VR: tested
 			return func(this);
 		}
 
@@ -1285,8 +1418,21 @@ namespace RE
 		bool IsSneaking()
 		{
 			using func_t = decltype(&Actor::IsSneaking);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1173627, 2207655) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(1173627, 2207655) };  // VR: tested
 			return func(this);
+		}
+
+		// Swimming, on the surface or under it: the character controller's state is kSwimming
+		// (hknpCharacterState::hknpCharacterStateType, 5).
+		[[nodiscard]] bool IsSwimming() const
+		{
+			return static_cast<std::int32_t>(DoGetCharacterState()) == 5;
+		}
+
+		// Under water: the under-water timer runs.
+		[[nodiscard]] bool IsUnderwater() const
+		{
+			return underWaterTimer > 0.0f;
 		}
 
 		bool IsVisible() const
@@ -1309,6 +1455,13 @@ namespace RE
 			return func(this, a_action, a_target);
 		}
 
+		void ReEquipAll()
+		{
+			using func_t = decltype(&Actor::ReEquipAll);
+			static REL::Relocation<func_t> func{ REL::RelocationID(461874, 0) };  // VR: checked
+			return func(this);
+		}
+
 		void RemovePerk(BGSPerk* a_perk)
 		{
 			using func_t = decltype(&Actor::RemovePerk);
@@ -1316,10 +1469,17 @@ namespace RE
 			return func(this, a_perk);
 		}
 
+		// How well this actor detects the target, light, distance, facing and sneak included, as a continuous scale.
+		// Measured on VR 1.2.72: below 0 unaware, 0 to about 20 suspicious, about 20 and up has seen the target
+		// (50-60 at point blank). Creates this actor's knowledge entry for the target, which needs its high process
+		// data. Not RequestDetectionLevels (ID 1368522, VR 0x140DFB3A0), the visual / sound split: it returns
+		// through a hidden result pointer of a type the symbol does not name, and a guessed 16-byte buffer for it
+		// overran the caller's stack. Nor AIProcess::SetDetectionModifier (VR 0x140E910D0): on VR its value is
+		// written, saved and never read by the detection code (its getter at 0x140E91100 has no callers).
 		int32_t RequestDetectionLevel(Actor* a_target, DETECTION_PRIORITY a_priority = DETECTION_PRIORITY::kNormal)
 		{
 			using func_t = decltype(&Actor::RequestDetectionLevel);
-			static REL::Relocation<func_t> func{ REL::ID(943772) };
+			static REL::Relocation<func_t> func{ REL::ID(943772) };  // VR: tested
 			return func(this, a_target, a_priority);
 		}
 
@@ -1351,11 +1511,43 @@ namespace RE
 			return func(this, a_gunState, a_val);
 		}
 
+		void SetCurrentAmmoCount(BGSEquipIndex a_equipIndex, std::uint32_t a_count)
+		{
+			using func_t = decltype(&Actor::SetCurrentAmmoCount);
+			static REL::Relocation<func_t> func{ REL::RelocationID(725546, 0) };  // VR: checked
+			return func(this, a_equipIndex, a_count);
+		}
+
 		void SetHeading(float a_angle)
 		{
 			using func_t = decltype(&Actor::SetHeading);
 			static REL::Relocation<func_t> func{ REL::RelocationID(353571, 2229625) };
 			return func(this, a_angle);
+		}
+
+		// Papyrus Actor.SetRestrained: a restrained actor stops moving and can't move, turn or shoot.
+		void SetRestrained(bool a_restrained)
+		{
+			using func_t = decltype(&Actor::SetRestrained);
+			static REL::Relocation<func_t> func{ REL::RelocationID(316742, 0) };  // VR: tested
+			return func(this, a_restrained);
+		}
+
+		// Starts combat with the target at once, on the calling thread; a_commandingActor is the actor commanding the
+		// attack, null for an actor attacking on its own account (Papyrus Actor.StartCombat). Does nothing to an
+		// actor already in combat with the target.
+		void StartCombat(Actor* a_target, Actor* a_commandingActor = nullptr)
+		{
+			using func_t = decltype(&Actor::StartCombat);
+			static REL::Relocation<func_t> func{ REL::RelocationID(765218, 0) };  // VR: tested
+			return func(this, a_target, a_commandingActor);
+		}
+
+		void SwitchRace(TESRace* a_race, bool a_player, bool a_unk)
+		{
+			using func_t = decltype(&Actor::SwitchRace);
+			static REL::Relocation<func_t> func{ REL::RelocationID(982494, 0) };  // VR: checked
+			return func(this, a_race, a_player, a_unk);
 		}
 
 		void TrespassAlarm(TESObjectREFR* a_refr, TESForm* a_owner, std::int32_t a_crime)

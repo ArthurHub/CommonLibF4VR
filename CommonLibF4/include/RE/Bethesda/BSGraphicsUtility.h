@@ -5,6 +5,7 @@ namespace RE
 	class NiPoint2;
 	class NiPoint3;
 	class NiColorA;
+	class BSSubIndexTriShape;
 }
 
 namespace RE::BSGraphics::Utility
@@ -70,4 +71,14 @@ namespace RE::BSGraphics::Utility
 		static REL::Relocation<func_t> func{ REL::RelocationID(990748, 2277129) };
 		func(a_vertices, a_index, a_vertexDesc, a_position, a_texCoord0, a_texCoord1, a_normal, a_binormal, a_tangent, a_color, a_skinBoneWeights, a_boneIndex0, a_boneIndex1, a_boneIndex2, a_boneIndex3);
 	}
+
+#ifdef ENABLE_FALLOUT_VR
+	// Fallout 4 VR only, no ID: recomputes the skinning bone matrices of the shape for a_frameCounter.
+	inline void CalcBoneMatrices(BSSubIndexTriShape* a_shape, std::uint64_t a_frameCounter)
+	{
+		using func_t = decltype(&CalcBoneMatrices);
+		static REL::Relocation<func_t> func{ REL::VariantID(0, 0, 0x1DABC60) };  // VR: checked
+		func(a_shape, a_frameCounter);
+	}
+#endif
 }

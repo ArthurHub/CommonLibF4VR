@@ -134,11 +134,12 @@ namespace RE
 		/// @param a_param3  Purpose not fully RE'd
 		/// @param a_param4  Purpose not fully RE'd
 		/// @param a_param5  Purpose not fully RE'd
-		void SetMotion(NiAVObject* a_object, hknpMotionPropertiesId::Preset a_type, bool a_param3, bool a_param4, bool a_param5)
+		/// Static in the game: the object is the first argument, and no world is passed.
+		static bool SetMotion(NiAVObject* a_object, hknpMotionPropertiesId::Preset a_type, bool a_param3, bool a_param4, bool a_param5)
 		{
 			using func_t = decltype(&bhkWorld::SetMotion);
-			static REL::Relocation<func_t> func{ REL::ID(357289) };
-			return func(this, a_object, a_type, a_param3, a_param4, a_param5);
+			static REL::Relocation<func_t> func{ REL::ID(357289) };  // VR: checked
+			return func(a_object, a_type, a_param3, a_param4, a_param5);
 		}
 
 		/// Enable or disable collision for a NiAVObject's physics body.

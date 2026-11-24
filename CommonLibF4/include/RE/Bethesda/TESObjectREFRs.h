@@ -707,6 +707,22 @@ namespace RE
 			return func(this, a_object, a_extra, a_count, a_oldContainer, a_filter, a_overrideRef);
 		}
 
+		// Attaches the 3D of every reference linked to this one as a child.
+		void AttachAllChildRef3D()
+		{
+			using func_t = decltype(&TESObjectREFR::AttachAllChildRef3D);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1047133, 0) };  // VR: checked
+			return func(this);
+		}
+
+		// Attaches this reference's 3D to the reference it is linked to as a child.
+		void AttachToParentRef3D()
+		{
+			using func_t = decltype(&TESObjectREFR::AttachToParentRef3D);
+			static REL::Relocation<func_t> func{ REL::RelocationID(145114, 0) };  // VR: checked
+			return func(this);
+		}
+
 		void AddKeyword(BGSKeyword* kwd)
 		{
 			using func_t = decltype(&TESObjectREFR::AddKeyword);
@@ -747,6 +763,13 @@ namespace RE
 			using func_t = decltype(&TESObjectREFR::ApplyEffectShader);
 			static REL::Relocation<func_t> func{ REL::ID(652173) };
 			return func(this, a_art, a_time, a_facingRef, a_attachToCamera, a_inheritRotation, a_3D, a_interfaceEffect);
+		}
+
+		void DropAddOn3DReplacement(NiAVObject* a_object)
+		{
+			using func_t = decltype(&TESObjectREFR::DropAddOn3DReplacement);
+			static REL::Relocation<func_t> func{ REL::RelocationID(66286, 0) };  // VR: checked
+			return func(this, a_object);
 		}
 
 		void Enable(bool a_resetInventory)
@@ -885,6 +908,20 @@ namespace RE
 			return func(this);
 		}
 
+		[[nodiscard]] TESWorldSpace* GetWorldSpace()
+		{
+			using func_t = decltype(&TESObjectREFR::GetWorldSpace);
+			static REL::Relocation<func_t> func{ REL::RelocationID(576133, 0) };  // VR: checked
+			return func(this);
+		}
+
+		void InitHavokForCollisionObject()
+		{
+			using func_t = decltype(&TESObjectREFR::InitHavokForCollisionObject);
+			static REL::Relocation<func_t> func{ REL::VariantID(471391, 0, 0x3EEE60) };  // VR: checked
+			return func(this);
+		}
+
 		void MarkAsDeleted()
 		{
 			using func_t = decltype(&TESObjectREFR::MarkAsDeleted);
@@ -920,11 +957,29 @@ namespace RE
 			return func(this, a_actor, a_keyword);
 		}
 
+		// Sets the reference's 3D without the extra work of the Set3D virtual (queued 3D tasks).
+		void Set3DSimple(NiAVObject* a_object, bool a_unk)
+		{
+			using func_t = decltype(&TESObjectREFR::Set3DSimple);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1409981, 0) };  // VR: checked
+			return func(this, a_object, a_unk);
+		}
+
 		void SetLocationOnReference(const NiPoint3& a_point)
 		{
 			using func_t = decltype(&TESObjectREFR::SetLocationOnReference);
 			static REL::Relocation<func_t> func{ REL::ID(1101832) };
 			return func(this, a_point);
+		}
+
+		// Fills the animation update data for this reference (its mandatory-update flag, then the
+		// ModifyAnimationUpdateData virtual) and returns it. The player's per-frame animation update calls it with
+		// the frame's delta time already in the data.
+		BSAnimationUpdateData* SetupAnimationUpdateDataForReference(BSAnimationUpdateData& a_data)
+		{
+			using func_t = decltype(&TESObjectREFR::SetupAnimationUpdateDataForReference);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1556434, 0) };  // VR: tested
+			return func(this, a_data);
 		}
 
 		void SetWantsDelete(bool a_delete)

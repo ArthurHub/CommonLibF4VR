@@ -99,6 +99,15 @@ namespace RE
 		// from IsBhkNiCollisionObject on reach the wrong slot there. Use a VR-only build, or
 		// REL::RelocateVirtual with the flat slot and the flat slot plus two.
 
+		// A copy of the object and everything under it (CreateClone, then ProcessClone on each), made under
+		// a_cloning; a NiNode clone comes back with no parent.
+		[[nodiscard]] NiObject* Clone(NiCloningProcess& a_cloning)
+		{
+			using func_t = decltype(&NiObject::Clone);
+			static REL::Relocation<func_t> func{ REL::RelocationID(418201, 0) };  // VR: tested
+			return func(this, a_cloning);
+		}
+
 		F4_HEAP_REDEFINE_NEW(NiObject);
 	};
 	static_assert(sizeof(NiObject) == 0x10);

@@ -46,6 +46,7 @@ set(SOURCES
 	include/RE/Bethesda/BSExtraData.h
 	include/RE/Bethesda/BSFadeNode.h
 	include/RE/Bethesda/BSFixedString.h
+	include/RE/Bethesda/BSFlattenedBoneTree.h
 	include/RE/Bethesda/BSGeometry.h
 	include/RE/Bethesda/BSGraphics.h
 	include/RE/Bethesda/BSGraphicsUtility.h
@@ -132,6 +133,7 @@ set(SOURCES
 	include/RE/Bethesda/BSScriptUtil.h
 	include/RE/Bethesda/BSSemaphore.h
 	include/RE/Bethesda/BSShader.h
+	include/RE/Bethesda/BSShaderManager.h
 	include/RE/Bethesda/BSShaderMaterial.h
 	include/RE/Bethesda/BSShaderProperty.h
 	include/RE/Bethesda/BSSkin.h
@@ -170,6 +172,7 @@ set(SOURCES
 	include/RE/Bethesda/CELLJobs.h
 	include/RE/Bethesda/CRC.h
 	include/RE/Bethesda/Calendar.h
+	include/RE/Bethesda/CollisionLayers.h
 	include/RE/Bethesda/CombatFormulas.h
 	include/RE/Bethesda/Console.h
 	include/RE/Bethesda/ControlMap.h
@@ -214,6 +217,7 @@ set(SOURCES
 	include/RE/Bethesda/PowerUtils.h
 	include/RE/Bethesda/ProcessLists.h
 	include/RE/Bethesda/Projectiles.h
+	include/RE/Bethesda/RadioManager.h
 	include/RE/Bethesda/ReferenceEffectController.h
 	include/RE/Bethesda/SCRIPT_OUTPUT.h
 	include/RE/Bethesda/SDirectory2.h
@@ -247,6 +251,10 @@ set(SOURCES
 	include/RE/Bethesda/UserEvents.h
 	include/RE/Bethesda/Utilities.h
 	include/RE/Bethesda/VATS.h
+	include/RE/Bethesda/VRHookSites.h
+	include/RE/Bethesda/VRRenderCamera.h
+	include/RE/Bethesda/VRSettings.h
+	include/RE/Bethesda/VRWorldData.h
 	include/RE/Bethesda/Workshop.h
 	include/RE/Bethesda/bhkCharacterController.h
 	include/RE/Bethesda/bhkPhysicsSystem.h
@@ -307,6 +315,7 @@ set(SOURCES
 	include/RE/NetImmerse/NiMatrix3.h
 	include/RE/NetImmerse/NiMemStream.h
 	include/RE/NetImmerse/NiNode.h
+	include/RE/NetImmerse/NiNodeUtils.h
 	include/RE/NetImmerse/NiObject.h
 	include/RE/NetImmerse/NiObjectNET.h
 	include/RE/NetImmerse/NiPoint.h

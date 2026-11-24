@@ -1501,11 +1501,26 @@ namespace RE
 			kWarnToLeave = 1u << 9,
 		};
 
+		void AttachReference3D(TESObjectREFR* a_ref, bool a_unk1, bool a_unk2)
+		{
+			using func_t = decltype(&TESObjectCELL::AttachReference3D);
+			static REL::Relocation<func_t> func{ REL::RelocationID(125567, 0) };  // VR: checked
+			return func(this, a_ref, a_unk1, a_unk2);
+		}
+
 		[[nodiscard]] bhkWorld* GetbhkWorld() const
 		{
 			using func_t = decltype(&TESObjectCELL::GetbhkWorld);
-			static REL::Relocation<func_t> func{ REL::ID(1326073) };
+			static REL::Relocation<func_t> func{ REL::ID(1326073) };  // VR: checked
 			return func(this);
+		}
+
+		// The land height under the point, into a_height; false where the cell has no land there.
+		bool GetLandHeight(const NiPoint3& a_point, float& a_height)
+		{
+			using func_t = decltype(&TESObjectCELL::GetLandHeight);
+			static REL::Relocation<func_t> func{ REL::RelocationID(953304, 0) };  // VR: checked
+			return func(this, a_point, a_height);
 		}
 
 		[[nodiscard]] bool GetCantWaitHere()

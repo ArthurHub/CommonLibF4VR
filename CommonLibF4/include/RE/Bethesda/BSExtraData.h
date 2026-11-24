@@ -927,6 +927,8 @@ namespace RE
 	public:
 		F4_HEAP_REDEFINE_NEW(ExtraDataList);
 
+		ExtraDataList() { ctor(); }
+
 		void AddExtra(BSExtraData* a_extra)
 		{
 			const BSAutoWriteLock l{ extraRWLock };
@@ -1018,11 +1020,39 @@ namespace RE
 			return func(this);
 		}
 
+		void SetAmmoCount(std::uint32_t a_count)
+		{
+			using func_t = decltype(&ExtraDataList::SetAmmoCount);
+			static REL::Relocation<func_t> func{ REL::RelocationID(290026, 0) };  // VR: checked
+			return func(this, a_count);
+		}
+
+		void SetCount(std::int16_t a_count)
+		{
+			using func_t = decltype(&ExtraDataList::SetCount);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1460465, 0) };  // VR: checked
+			return func(this, a_count);
+		}
+
 		void SetHealthPercent(float a_healthPerc)
 		{
 			using func_t = decltype(&ExtraDataList::SetHealthPercent);
 			static REL::Relocation<func_t> func{ REL::RelocationID(1208294, 2190124) };
 			return func(this, a_healthPerc);
+		}
+
+		void SetMultiBoundRef(TESObjectREFR* a_ref)
+		{
+			using func_t = decltype(&ExtraDataList::SetMultiBoundRef);
+			static REL::Relocation<func_t> func{ REL::RelocationID(840201, 0) };  // VR: checked
+			return func(this, a_ref);
+		}
+
+		void SetPersistentCell(TESObjectCELL* a_cell)
+		{
+			using func_t = decltype(&ExtraDataList::SetPersistentCell);
+			static REL::Relocation<func_t> func{ REL::RelocationID(335243, 0) };  // VR: checked
+			return func(this, a_cell);
 		}
 
 		bool ClearFavorite()
@@ -1063,6 +1093,14 @@ namespace RE
 		// members
 		BaseExtraList           extraData;    // 08
 		mutable BSReadWriteLock extraRWLock;  // 20
+
+	private:
+		ExtraDataList* ctor()
+		{
+			using func_t = decltype(&ExtraDataList::ctor);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1329859, 0) };  // VR: checked
+			return func(this);
+		}
 	};
 	static_assert(sizeof(ExtraDataList) == 0x28);
 }

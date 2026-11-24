@@ -24,7 +24,7 @@ namespace RE
 
 		[[nodiscard]] static ProcessLists* GetSingleton()
 		{
-			static REL::Relocation<ProcessLists**> singleton{ REL::RelocationID(1569706, 2688869) };
+			static REL::Relocation<ProcessLists**> singleton{ REL::RelocationID(1569706, 2688869) };  // VR: tested
 			return *singleton;
 		}
 
@@ -33,6 +33,15 @@ namespace RE
 			using func_t = decltype(&ProcessLists::AreHostileActorsNear);
 			static REL::Relocation<func_t> func{ REL::RelocationID(1053584, 2234105) };
 			return func(this, a_hostileActorArray);
+		}
+
+		// Every loaded actor within a_radius of the world point, through the engine, so ProcessLists' own actor
+		// arrays are not read.
+		void GetActorsWithinRangeOfPoint(const NiPoint3& a_point, float a_radius, BSScrapArray<NiPointer<Actor>>& a_outActors)
+		{
+			using func_t = decltype(&ProcessLists::GetActorsWithinRangeOfPoint);
+			static REL::Relocation<func_t> func{ REL::RelocationID(734562, 0) };  // VR: tested
+			return func(this, a_point, a_radius, a_outActors);
 		}
 
 		void ForEachMagicTempEffect(std::function<BSContainer::ForEachResult(BSTempEffect*)> a_callback)

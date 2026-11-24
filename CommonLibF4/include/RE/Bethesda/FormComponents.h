@@ -931,11 +931,18 @@ namespace RE
 		void AddKeyword(BGSKeyword* a_keyword)
 		{
 			using func_t = decltype(&BGSKeywordForm::AddKeyword);
-			static REL::Relocation<func_t> func{ REL::RelocationID(762999, 2192766) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(762999, 2192766) };  // VR: tested
 			return func(this, a_keyword);
 		}
 
 		bool AddKeywords(const std::vector<BGSKeyword*>& a_keywords);
+
+		void ClearAllKeywords()
+		{
+			using func_t = decltype(&BGSKeywordForm::ClearAllKeywords);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1121947, 0) };  // VR: checked
+			return func(this);
+		}
 
 		[[nodiscard]] bool ContainsKeywordString(std::string_view a_editorID) const;
 		[[nodiscard]] bool HasKeywordID(TESFormID a_formID) const;

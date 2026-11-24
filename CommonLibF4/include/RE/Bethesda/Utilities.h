@@ -33,6 +33,20 @@ namespace RE
 			return func(a_actor, a_projectile, a_pickData);
 		}
 
+		[[nodiscard]] inline bool IsActorUsingMagic(Actor* a_actor)
+		{
+			using func_t = decltype(&IsActorUsingMagic);
+			static REL::Relocation<func_t> func{ REL::VariantID(1203754, 0, 0x1133C30) };  // VR: checked
+			return func(a_actor);
+		}
+
+		[[nodiscard]] inline bool IsActorUsingMelee(Actor* a_actor)
+		{
+			using func_t = decltype(&IsActorUsingMelee);
+			static REL::Relocation<func_t> func{ REL::RelocationID(858050, 0) };  // VR: checked
+			return func(a_actor);
+		}
+
 		inline bool CalculateProjectileTrajectory(
 			const NiPoint3& a_projectilePos,
 			const NiPoint3& a_projectileVelocity,

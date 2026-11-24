@@ -57,6 +57,14 @@ namespace RE
 		BSSpinLock                                             dependentManagerLock;  // D0
 		std::uint32_t                                          activeGraph;           // D8
 		std::uint32_t                                          generateDepth;         // DC
+
+		// Switches the manager to the graph at a_index (see activeGraph). The return, if any, is not mapped.
+		void SetActiveGraph(std::int32_t a_index)
+		{
+			using func_t = decltype(&BSAnimationGraphManager::SetActiveGraph);
+			static REL::Relocation<func_t> func{ REL::VariantID(121579, 0, 0x1690240) };  // VR: checked
+			return func(this, a_index);
+		}
 	};
 	static_assert(sizeof(BSAnimationGraphManager) == 0xE0);
 }

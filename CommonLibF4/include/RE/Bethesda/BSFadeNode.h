@@ -58,6 +58,23 @@ namespace RE
 		};
 		static_assert(sizeof(RUNTIME_DATA) == 0x80);
 
+		// Merges the bounds of the geometry under the node into its world bound, for culling.
+		void MergeWorldBounds()
+		{
+			using func_t = decltype(&BSFadeNode::MergeWorldBounds);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1012658, 0) };  // VR: tested
+			return func(this);
+		}
+
+		// Rebuilds the node's flattened geometry array (geomArray) from the geometry under it, for culling.
+		// a_unk is compared with a field of the node first; the player's root takes 1.
+		bool UpdateGeomArray(std::uint32_t a_unk)
+		{
+			using func_t = decltype(&BSFadeNode::UpdateGeomArray);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1572609, 0) };  // VR: tested
+			return func(this, a_unk);
+		}
+
 		[[nodiscard]] inline RUNTIME_DATA& GetFadeNodeRuntimeData() noexcept
 		{
 			return REL::RelocateMember<RUNTIME_DATA>(this, 0x140, 0x180);

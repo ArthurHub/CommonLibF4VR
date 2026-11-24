@@ -403,6 +403,19 @@ namespace RE
 	};
 	static_assert(sizeof(INIPrefSettingCollection) == 0x128);
 
+	class SettingHandlerMap
+	{
+	public:
+		// Runs the handlers the game installed on the setting, as its settings menu does after changing one, so
+		// the game takes the new value at once.
+		static void SettingUpdated(Setting& a_setting)
+		{
+			using func_t = decltype(&SettingHandlerMap::SettingUpdated);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1267051, 0) };  // VR: tested
+			return func(a_setting);
+		}
+	};
+
 	inline Setting* GetINISetting(std::string_view a_name)
 	{
 		Setting* setting = nullptr;

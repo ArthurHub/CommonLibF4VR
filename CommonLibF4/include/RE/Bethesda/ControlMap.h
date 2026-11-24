@@ -108,7 +108,7 @@ namespace RE
 		void SaveRemappings()
 		{
 			using func_t = decltype(&ControlMap::SaveRemappings);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1141541, 0) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(1141541, 0) };  // VR: checked
 			return func(this);
 		}
 

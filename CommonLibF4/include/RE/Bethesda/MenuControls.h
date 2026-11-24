@@ -22,8 +22,15 @@ namespace RE
 	public:
 		[[nodiscard]] static MenuControls* GetSingleton()
 		{
-			static REL::Relocation<MenuControls**> singleton{ REL::ID(520890) };
+			static REL::Relocation<MenuControls**> singleton{ REL::ID(520890) };  // VR: checked
 			return *singleton;
+		}
+
+		void ForcePauseGame()
+		{
+			using func_t = decltype(&MenuControls::ForcePauseGame);
+			static REL::Relocation<func_t> func{ REL::RelocationID(1307560, 0) };  // VR: checked
+			return func(this);
 		}
 
 		bool QueueScreenshot() const

@@ -15,8 +15,17 @@ namespace RE
 	public:
 		static TaskQueueInterface* GetSingleton()
 		{
-			static REL::Relocation<TaskQueueInterface**> singleton{ REL::ID(7491) };
+			static REL::Relocation<TaskQueueInterface**> singleton{ REL::ID(7491) };  // VR: tested
 			return *singleton;
+		}
+
+		// Queues the combatant starting combat with the target, applied on the engine's schedule a frame or more
+		// later rather than at once; a_commandAlly as Papyrus Actor.StartCombat's abCommandAlly.
+		void QueueActorStartCombat(Actor& a_combatant, Actor& a_target, bool a_commandAlly)
+		{
+			using func_t = decltype(&TaskQueueInterface::QueueActorStartCombat);
+			static REL::Relocation<func_t> func{ REL::RelocationID(179777, 0) };  // VR: tested
+			return func(this, a_combatant, a_target, a_commandAlly);
 		}
 
 		void QueueClosePipboy()

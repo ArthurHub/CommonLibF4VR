@@ -3,6 +3,7 @@
 #include "RE/Bethesda/AITimeStamp.h"
 #include "RE/Bethesda/Actor.h"
 #include "RE/Bethesda/BGSCharacterTint.h"
+#include "RE/Bethesda/BSFlattenedBoneTree.h"
 #include "RE/Bethesda/BSLock.h"
 #include "RE/Bethesda/BSPointerHandle.h"
 #include "RE/Bethesda/BSSoundHandle.h"
@@ -249,9 +250,9 @@ namespace RE
 		NiNode*     unk7C8;                                      // E8 (7C8) always null so far
 		NiNode*     scopeParentNode;                             // F0 (7D0) "ScopeParent"
 		NiNode*     compassDialsNode;                            // F8 (7D8) "CompassDials" - only set in power armor
-		NiNode*     hmdNode;                                     // 100 (7E0) "HMDNode"
+		NiNode*     hmdNode;                                     // 100 (7E0) "HMDNode" - UpdateVRUI rebuilds it from uiAnchorYaw each frame
 		NiNode*     offscreenHmdNode;                            // 108 (7E8) "OffscreenHmdNode"
-		NiNode*     uprightHmdNode;                              // 110 (7F0) "UprightHmdNode"
+		NiNode*     uprightHmdNode;                              // 110 (7F0) "UprightHmdNode" - the same; the world-space menus hang off these two
 		NiNode*     uprightHmdLagNode;                           // 118 (7F8) "UprightHmdLagNode"
 		NiNode*     blackSphereNode;                             // 120 (800) "BlackSphere"
 		NiNode*     headLightParentNode;                         // 128 (808) "HeadLightParent" - the head lamp hangs here
@@ -294,16 +295,17 @@ namespace RE
 		std::byte     pad855[0x3];        // 15 (855)
 		std::byte     unk858[0x34];       // 18 (858)  a list: the ctor points +8 back at itself, and +30 held 0x30 in game
 		std::byte     pad88C[0x4];        // 4C (88C)
-		float         uiAnchorYaw;        // 50 (890)  the world-space UI anchor yaw (F4VROffsets.h)
+		float         uiAnchorYaw;        // 50 (890)  the yaw the world-space UI is anchored to, see UpdateVRUI
 		float         uiHeadYaw;          // 54 (894)  the head yaw it trails
-		void*         unk898;             // 58 (898)
+		float         uiLagTimer;         // 58 (898)  seconds counted against fHmdRotationLagDuration:VRUI
+		float         uiRecoverySpeed;    // 5C (89C)  the speed the anchor is catching up at
 		void*         unk8A0;             // 60 (8A0)
 		float         unk8A8;             // 68 (8A8)  game-time seconds, stamped on the frame actionCooldown below is armed: two stamps 40.9 s apart matched the wall clock exactly
 		std::uint32_t unk8AC;             // 6C (8AC)
 		std::uint32_t unk8B0;             // 70 (8B0)
 		NiPoint3      unk8B4;             // 74 (8B4)
 		std::uint8_t  unk8C0[8];          // 80 (8C0)  packed: the ctor writes a word, a byte, then an unaligned word. [0] goes 1 with unk8F8 on entering power armor
-		float         snapTurnTargetYaw;  // 88 (8C8)  the snap-turn target (F4VROffsets.h)
+		float         snapTurnTargetYaw;  // 88 (8C8)  the snap-turn target, see UpdateVRUI
 		std::uint32_t rightHandedMode;    // 8C (8CC)  1 when bLeftHandedMode:VR is off
 		std::uint32_t leftHandedMode;     // 90 (8D0)  1 when it is on
 		std::uint32_t unk8D4;             // 94 (8D4)
@@ -362,6 +364,7 @@ namespace RE
 	static_assert(sizeof(VRPlayerState) == 0x190);
 	static_assert(offsetof(VRPlayerState, uiAnchorYaw) == 0x50);
 	static_assert(offsetof(VRPlayerState, uiHeadYaw) == 0x54);
+	static_assert(offsetof(VRPlayerState, uiRecoverySpeed) == 0x5C);
 	static_assert(offsetof(VRPlayerState, snapTurnTargetYaw) == 0x88);
 	static_assert(offsetof(VRPlayerState, rightHandedMode) == 0x8C);
 	static_assert(offsetof(VRPlayerState, leftHandedMode) == 0x90);
@@ -574,6 +577,70 @@ namespace RE
 			static REL::Relocation<func_t> func{ REL::ID(520007) };
 			return func(this, a_unk);
 		}
+
+		// The skeleton's bone tree: the first child of the third-person 3D root.
+		[[nodiscard]] BSFlattenedBoneTree* GetBoneTree() const
+		{
+			const auto root = loadedData ? loadedData->data3D.get() : nullptr;
+			const auto node = root ? root->IsNode() : nullptr;
+			return node && !node->children.empty() && node->children[0] ? static_cast<BSFlattenedBoneTree*>(node->children[0]->IsNode()) : nullptr;
+		}
+
+		// The first-person skeleton's bone tree: the first child of firstPerson3D.
+		[[nodiscard]] BSFlattenedBoneTree* GetFirstPersonBoneTree() const
+		{
+			const auto node = firstPerson3D.get();
+			return node && !node->children.empty() && node->children[0] ? static_cast<BSFlattenedBoneTree*>(node->children[0]->IsNode()) : nullptr;
+		}
+
+#ifdef ENABLE_FALLOUT_VR
+		// The wand node of the left hand, whichever hand is primary (vrState.leftHandedMode, which the game keeps
+		// from bLeftHandedMode:VR).
+		[[nodiscard]] NiNode* GetLeftHandWandNode() const
+		{
+			return vrState.leftHandedMode ? vrNodes.primaryWandNode : vrNodes.secondaryWandNode;
+		}
+
+		[[nodiscard]] NiNode* GetRightHandWandNode() const
+		{
+			return vrState.leftHandedMode ? vrNodes.secondaryWandNode : vrNodes.primaryWandNode;
+		}
+
+		// Fallout 4 VR only, no ID. Poses the first-person arm from the upper arm down so the hand holds *a_weapon
+		// at *a_offsetNode. The player update calls it twice a frame (VRHookSites::Update1stPersonArm1 / 2).
+		void Update1stPersonArm(NiNode** a_weapon, NiNode** a_offsetNode)
+		{
+			using func_t = decltype(&PlayerCharacter::Update1stPersonArm);
+			static REL::Relocation<func_t> func{ REL::VariantID(0, 0, 0xEF6280) };  // VR: tested
+			return func(this, a_weapon, a_offsetNode);
+		}
+
+		// Fallout 4 VR only, no ID. The world-space VR UI, run from the player update every frame on the main
+		// thread. It drags vrState.uiAnchorYaw after where the head looks (uiHeadYaw) under the
+		// fHmdRotationLag*:VRUI settings - trailing it, holding off for fHmdRotationLagDuration, then accelerating
+		// at fHmdRotationLagRecoveryAcceleration up to fHmdRotationLagRecoveryMaxSpeed, and snapping it when the
+		// head is further away than fHmdRotationLagMaxDistance (45 degrees) - and rebuilds vrNodes.hmdNode and
+		// uprightHmdNode from it, which the HUD, the dialogue menu and the other world-space menus hang off.
+		// Writing uiAnchorYaw after it runs points the whole UI there, built by the engine on the next frame; the
+		// max distance still clamps it. The yaws are radians clockwise from +Y, as the player's angleZ.
+		//
+		// It is also the applier of the engine's snap turn. The snap entry points (VR 0x140EFA920 smoothed,
+		// 0x140EFA980 instant with the comfort fade) only park a target in vrState.snapTurnTargetYaw behind the
+		// flags at 12A4: bit 0x20 hands it to this function, and bit 0x40 is cleared only by the vanilla
+		// thumbstick handler when the stick re-centres. Called while that handler is out of the loop (a menu
+		// that blocks turning) the first call latches 0x40 and every later one is dropped; turn through
+		// VRWorldData instead.
+		//
+		// The WS*Model menus' placement methods (slot 2 of WSHUDMenu, WSLootMenu, WSDialogueInputModel and ten
+		// more) do not place a menu: they write its node's local transform from per-menu [VRUI] settings that
+		// are all 0 (scale 1) for the dialogue menu, about three times a second on a worker thread.
+		void UpdateVRUI(float a_deltaSeconds, bool a_unk)
+		{
+			using func_t = decltype(&PlayerCharacter::UpdateVRUI);
+			static REL::Relocation<func_t> func{ REL::VariantID(0, 0, 0xEF7180) };  // VR: checked
+			return func(this, a_deltaSeconds, a_unk);
+		}
+#endif
 
 		// members
 #ifdef ENABLE_FALLOUT_VR

@@ -61,6 +61,30 @@ namespace RE
 			return func(this, a_point, a_excluded);
 		}
 
+		// Sets the light's shape and builds the light volume the deferred renderer draws it with (geometry). A spot
+		// gets a cone, BSShaderUtil::GenerateCone(a_width, a_baseRadius, a_height, 18 sides), made under
+		// BSGraphics::Renderer::TryLock (no new cone while the lock is busy), its bound copied onto the NiLight. The
+		// light factory (VR 0x1427E9CD0) passes, for a spot, a_width = sqrt(2 * tan^2(FOV / 2)) * 1.22077 (half FOV
+		// clamped to [1, 160] degrees), a_baseRadius = a_width * radius, a_height = radius, and 1, 1, 1 (read by
+		// the area light only). Returns early when the shape is unchanged: clear shape first to rebuild a live
+		// light's cone.
+		void SetShape(Shape a_shape, float a_width, float a_baseRadius, float a_height, float a_x, float a_y, float a_z)
+		{
+			using func_t = decltype(&BSLight::SetShape);
+			static REL::Relocation<func_t> func{ REL::VariantID(776089, 0, 0x286F9B0) };  // VR: tested
+			return func(this, a_shape, a_width, a_baseRadius, a_height, a_x, a_y, a_z);
+		}
+
+		// Applies a perspective frustum to the camera (NiCamera::SetViewFrustum): +/-tan of the half FOVs (radians,
+		// each clamped to [1, 160] degrees), a_near, and the NiLight's radius as far (a_far only while the light has
+		// no NiLight). Sets up a shadow light's camera, and the gobo projection camera of a light without shadows.
+		void SetCameraFrustum(float a_fovX, float a_fovY, NiCamera* a_camera, float a_near, float a_far)
+		{
+			using func_t = decltype(&BSLight::SetCameraFrustum);
+			static REL::Relocation<func_t> func{ REL::VariantID(1138070, 0, 0x286F180) };  // VR: tested
+			return func(this, a_fovX, a_fovY, a_camera, a_near, a_far);
+		}
+
 		// members - layout from F4SE, the same in Fallout4VR.exe: the constructor 0x286D510, SetLight 0x286E870,
 		// GetLuminanceAtPoint 0x286EA60, the light factory 0x27E9CD0 (fills a new light from TESObjectLIGH) and
 		// the shape setter 0x286F9B0.
