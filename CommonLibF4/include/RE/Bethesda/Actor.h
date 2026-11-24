@@ -285,6 +285,26 @@ namespace RE
 	};
 	static_assert(sizeof(EquippedItemData) == 0x10);
 
+	// A weapon's muzzle flash, which EquippedWeaponData keeps while the weapon fires. Read from MuzzleFlash::MuzzleFlash
+	// (Projectile*, TESObjectREFR*) in Fallout4VR.exe 1.2.72 and Fallout4.exe 1.10.163, which build it alike.
+	class MuzzleFlash
+	{
+	public:
+		// members
+		std::uint16_t         unk00;           // 00
+		std::uint8_t          unk02;           // 02
+		float                 unk04;           // 04 - starts at -FLT_MAX
+		float                 unk08;           // 08 - from the projectile base
+		std::uint32_t         unk0C;           // 0C
+		NiPointer<NiNode>     flash3D;         // 10 - the flash's own 3D, placed at fireNode
+		NiPointer<NiNode>     fireNode;        // 18 - the projectile's fire node (Projectile::GetFireNode), where the weapon fires from
+		NiPointer<NiAVObject> unk20;           // 20
+		BGSProjectile*        projectileBase;  // 28 - Projectile::GetProjectileBase
+		TESForm*              unk30;           // 30 - the object of the projectile's BGSObjectInstance at +238
+		ObjectRefHandle       shooter;         // 38 - the reference that fired
+	};
+	static_assert(sizeof(MuzzleFlash) == 0x40);
+
 	class __declspec(novtable) EquippedWeaponData :
 		public EquippedItemData  // 00
 	{

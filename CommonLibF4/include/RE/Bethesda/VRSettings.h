@@ -74,6 +74,11 @@ namespace RE::VRSettings
 		return projected && projected->GetBinary() ? PipboyPlacement::kProjected : PipboyPlacement::kWrist;
 	}
 
+	[[nodiscard]] inline bool IsPipboyOnWrist()
+	{
+		return GetPipboyPlacement() == PipboyPlacement::kWrist;
+	}
+
 	// Sets where the game puts the Pip-Boy as its settings menu does: writes both settings, runs the handlers the
 	// game installed on each (SettingHandlerMap::SettingUpdated), and saves Fallout4Prefs.ini. Game thread only.
 	inline void SetPipboyPlacement(PipboyPlacement a_placement)
