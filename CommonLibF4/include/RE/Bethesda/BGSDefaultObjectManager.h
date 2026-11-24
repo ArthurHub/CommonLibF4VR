@@ -402,7 +402,11 @@ namespace RE
 		kHelmetitemkeyword,
 		kClothesitemkeyword,
 
-		kTotal
+		kTotal,
+
+		// Fallout 4 VR only, past the flat table: GetDefaultObjectIndex places them on VR, and nowhere else
+		kHelpManualVRViveWand = kTotal,
+		kTutorialSwimming
 	};
 
 	enum class DEFAULT_OBJECT_TYPE
@@ -428,13 +432,39 @@ namespace RE
 	};
 	static_assert(sizeof(DEFAULT_OBJECT_DATA) == 0x20);
 
-	// Fallout 4 VR's table holds 396 entries: it inserts "Help Manual VR - Vive Wand" at 230, before
-	// "Keyword - Type Ammo", and adds "Tutorial - Swimming" at the end, so on VR every DEFAULT_OBJECT from 230 on
-	// sits one index later. The span covers the first 394.
-	[[nodiscard]] inline std::span<DEFAULT_OBJECT_DATA, 394> GetDefaultObjectData()
+	// The game's index of a default object, in GetDefaultObjectData and BGSDefaultObjectManager's arrays, or -1 for
+	// one this runtime lacks. The enum follows the flat table; Fallout 4 VR's has 396 entries: it inserts
+	// "Help Manual VR - Vive Wand" at 230, before "Keyword - Type Ammo", and adds "Tutorial - Swimming" at the end,
+	// so on VR every object from 230 on sits one index later.
+	[[nodiscard]] inline std::int32_t GetDefaultObjectIndex(DEFAULT_OBJECT a_object) noexcept
 	{
-		static REL::Relocation<DEFAULT_OBJECT_DATA(*)[394]> data{ REL::VariantID(838886, 0, 0x3712E80) };  // VR: checked
-		return { *data };
+		constexpr std::int32_t VR_INSERTED = 230;
+		const auto             value = static_cast<std::int32_t>(std::to_underlying(a_object));
+		const auto             flatTotal = static_cast<std::int32_t>(std::to_underlying(DEFAULT_OBJECT::kTotal));
+		if (REL::Module::IsVR()) {
+			switch (a_object) {
+			case DEFAULT_OBJECT::kHelpManualVRViveWand:
+				return VR_INSERTED;
+			case DEFAULT_OBJECT::kTutorialSwimming:
+				return flatTotal + 1;
+			default:
+				return value < 0 || value >= flatTotal ? -1 : (value >= VR_INSERTED ? value + 1 : value);
+			}
+		}
+		return value < 0 || value >= flatTotal ? -1 : value;
+	}
+
+	// How many default objects this runtime has: 394, and 396 on Fallout 4 VR.
+	[[nodiscard]] inline std::size_t GetDefaultObjectCount() noexcept
+	{
+		return std::to_underlying(DEFAULT_OBJECT::kTotal) + (REL::Module::IsVR() ? 2 : 0);
+	}
+
+	// The game's table of default objects, by GetDefaultObjectIndex.
+	[[nodiscard]] inline std::span<DEFAULT_OBJECT_DATA> GetDefaultObjectData()
+	{
+		static REL::Relocation<DEFAULT_OBJECT_DATA*> data{ REL::VariantID(838886, 0, 0x3712E80) };  // VR: checked
+		return { data.get(), GetDefaultObjectCount() };
 	}
 
 	class __declspec(novtable) BGSDefaultObjectManager :
@@ -455,10 +485,20 @@ namespace RE
 
 		[[nodiscard]] TESForm* GetDefaultObject(DEFAULT_OBJECT a_obj) const noexcept
 		{
-			assert(a_obj < DEFAULT_OBJECT::kTotal);
-			return objectInitArray[std::to_underlying(a_obj)] ?
-			           objectArray[std::to_underlying(a_obj)] :
-			           nullptr;
+			const auto index = GetDefaultObjectIndex(a_obj);
+			return index >= 0 && GetObjectInitArray()[index] ? objectArray[index] : nullptr;
+		}
+
+		// Which entries of objectArray are set, indexed by GetDefaultObjectIndex. objectArray starts at 20 on every
+		// runtime; this array follows it, so it sits at C70, and at C80 on VR's longer table.
+		[[nodiscard]] bool* GetObjectInitArray() noexcept
+		{
+			return &REL::RelocateMember<bool>(this, 0xC70, 0xC80);
+		}
+
+		[[nodiscard]] const bool* GetObjectInitArray() const noexcept
+		{
+			return &REL::RelocateMember<const bool>(this, 0xC70, 0xC80);
 		}
 
 		template <class T>
@@ -471,11 +511,25 @@ namespace RE
 			return obj ? obj->As<T>() : nullptr;
 		}
 
-		// members
+		// members - index them by GetDefaultObjectIndex, not by the enum's value, which only matches off VR
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_F4) && !defined(ENABLE_FALLOUT_NG)
+		TESForm* objectArray[std::to_underlying(DEFAULT_OBJECT::kTotal) + 2];      // 020
+		bool     objectInitArray[std::to_underlying(DEFAULT_OBJECT::kTotal) + 2];  // C80
+#else
+		// A build that includes the flat game declares the flat layout: on VR, objectInitArray is at C80, so reach
+		// it through GetObjectInitArray.
 		TESForm* objectArray[std::to_underlying(DEFAULT_OBJECT::kTotal)];      // 020
 		bool     objectInitArray[std::to_underlying(DEFAULT_OBJECT::kTotal)];  // C70
+#endif
 	};
+#if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_F4) && !defined(ENABLE_FALLOUT_NG)
+	// Read from Fallout4VR.exe 1.2.72: its DOBJ loader clears objectInitArray at C80 (flat C70), and its readers
+	// of an object past 230 index objectArray one slot later.
+	static_assert(offsetof(BGSDefaultObjectManager, objectInitArray) == 0xC80);
+	static_assert(sizeof(BGSDefaultObjectManager) == 0xE10);
+#else
 	static_assert(sizeof(BGSDefaultObjectManager) == 0xE00);
+#endif
 
 	class __declspec(novtable) BGSDefaultObject :
 		public TESForm  // 00
