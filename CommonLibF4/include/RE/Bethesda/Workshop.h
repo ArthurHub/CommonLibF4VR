@@ -207,7 +207,7 @@ namespace RE
 		[[nodiscard]] inline bool FreeBuild()
 		{
 			using func_t = decltype(&Workshop::FreeBuild);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1583365, 2194924) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(1583365, 2194924) };  // VR: broken (no VR function has its code; the look-alikes call WorkshopCanSelectRef, CanStoreRef or IsValidMultiSelectItem instead)
 			return func();
 		}
 
@@ -291,7 +291,7 @@ namespace RE
 		inline void SetSelectedEditItem(ObjectRefHandle a_refr)
 		{
 			using func_t = decltype(&Workshop::SetSelectedEditItem);
-			static REL::Relocation<func_t> func{ REL::ID(2562) };
+			static REL::Relocation<func_t> func{ REL::ID(2562) };  // VR: broken (no VR function matches it by code, callers or call graph)
 			return func(a_refr);
 		}
 

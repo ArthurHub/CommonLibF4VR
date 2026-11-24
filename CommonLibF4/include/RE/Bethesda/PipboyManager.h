@@ -90,7 +90,7 @@ namespace RE
 		void EnablePipboyShader()
 		{
 			using func_t = decltype(&PipboyManager::EnablePipboyShader);
-			static REL::Relocation<func_t> func{ REL::ID(157921) };
+			static REL::Relocation<func_t> func{ REL::VariantID(157921, 0, 0xC34EC0) };  // VR: checked (VR inlines RefreshPipboyRenderSurface into it)
 			return func(this);
 		}
 
@@ -104,14 +104,14 @@ namespace RE
 		void LowerPipboy(LOWER_REASON a_reason)
 		{
 			using func_t = decltype(&PipboyManager::LowerPipboy);
-			static REL::Relocation<func_t> func{ REL::ID(1444875) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1444875, 0, 0xC33450) };  // VR: checked
 			return func(this, a_reason);
 		}
 
 		void OnPipboyCloseAnim()
 		{
 			using func_t = decltype(&PipboyManager::OnPipboyCloseAnim);
-			static REL::Relocation<func_t> func{ REL::ID(1231000) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1231000, 0, 0xC337A0) };  // VR: checked
 			return func(this);
 		}
 
@@ -181,14 +181,14 @@ namespace RE
 		void PlayPipboyOpenAnim(const RE::BSFixedString& a_menuName)
 		{
 			using func_t = decltype(&PipboyManager::PlayPipboyOpenAnim);
-			static REL::Relocation<func_t> func{ REL::ID(663900) };
+			static REL::Relocation<func_t> func{ REL::VariantID(663900, 0, 0xC32530) };  // VR: checked
 			return func(this, a_menuName);
 		}
 
 		void PlayPipboyOpenTerminalAnim(BGSTerminal* a_terminal)
 		{
 			using func_t = decltype(&PipboyManager::PlayPipboyOpenTerminalAnim);
-			static REL::Relocation<func_t> func{ REL::ID(743427) };
+			static REL::Relocation<func_t> func{ REL::VariantID(743427, 0, 0xC32CD0) };  // VR: checked
 			return func(this, a_terminal);
 		}
 
@@ -209,14 +209,14 @@ namespace RE
 		void RaisePipboy()
 		{
 			using func_t = decltype(&PipboyManager::RaisePipboy);
-			static REL::Relocation<func_t> func{ REL::ID(726763) };
+			static REL::Relocation<func_t> func{ REL::VariantID(726763, 0, 0xC335A0) };  // VR: checked
 			return func(this);
 		}
 
 		void RefreshPipboyRenderSurface()
 		{
 			using func_t = decltype(&PipboyManager::RefreshPipboyRenderSurface);
-			static REL::Relocation<func_t> func{ REL::ID(81339) };
+			static REL::Relocation<func_t> func{ REL::ID(81339) };  // VR: broken (inlined into EnablePipboyShader on VR, no function of its own)
 			return func(this);
 		}
 
@@ -237,7 +237,7 @@ namespace RE
 		void UpdateCursorConstraint(bool a_enable)
 		{
 			using func_t = decltype(&PipboyManager::UpdateCursorConstraint);
-			static REL::Relocation<func_t> func{ REL::ID(900802) };
+			static REL::Relocation<func_t> func{ REL::VariantID(900802, 0, 0xC35430) };  // VR: checked
 			return func(this, a_enable);
 		}
 

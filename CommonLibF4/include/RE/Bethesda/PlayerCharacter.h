@@ -493,7 +493,7 @@ namespace RE
 		bool IsImmortal()
 		{
 			using func_t = decltype(&PlayerCharacter::IsImmortal);
-			static REL::Relocation<func_t> func{ REL::RelocationID(500346, 2232988) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(500346, 2232988) };  // VR: broken (inlined on VR: its test sits inside 0x140F0DBE0, wrapped in more checks)
 			return func(this);
 		}
 

@@ -12,7 +12,7 @@ namespace RE::msvc
 		[[nodiscard]] const char* name() const noexcept
 		{
 			using func_t = const char* (*)(const type_info*, __type_info_node*) noexcept;
-			static REL::Relocation<func_t*> func{ REL::ID(1419793) };
+			static REL::Relocation<func_t*> func{ REL::VariantID(1419793, 0, 0x2C4C760) };  // VR: checked
 			return (*func)(this, std::addressof(get_root_node()));
 		}
 
@@ -21,7 +21,7 @@ namespace RE::msvc
 	private:
 		[[nodiscard]] static __type_info_node& get_root_node() noexcept
 		{
-			static REL::Relocation<__type_info_node*> root{ REL::ID(161235) };
+			static REL::Relocation<__type_info_node*> root{ REL::VariantID(161235, 0, 0x68A2AD0) };  // VR: checked
 			return *root;
 		}
 

@@ -80,7 +80,7 @@ namespace RE
 		static void SendUIBoolMessage(const BSFixedString& a_menuName, UI_MESSAGE_TYPE a_type, bool a_value)
 		{
 			using func_t = decltype(&BSUIMessageData::SendUIBoolMessage);
-			static REL::Relocation<func_t> func{ REL::ID(1388308) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1388308, 0, 0x20D99C0) };  // VR: checked
 			return func(a_menuName, a_type, a_value);
 		}
 

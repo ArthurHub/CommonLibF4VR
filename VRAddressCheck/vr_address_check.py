@@ -36,9 +36,10 @@ RE_RELOCATION_ID = re.compile(r"REL::RelocationID\s*[({]\s*(\d+)\s*,\s*(\d+)\s*(
 RE_VARIANT_ID = re.compile(r"REL::VariantID\s*[({]\s*(\d+)\s*,\s*(\d+)\s*,\s*(0x[0-9A-Fa-f]+|\d+)\s*[)}]")
 RE_OFFSET = re.compile(r"REL::Offset\s*[({]\s*(0x[0-9A-Fa-f]+)\s*[)}]")
 RE_VARIANT_OFFSET = re.compile(r"REL::VariantOffset\s*[({]\s*(0x[0-9A-Fa-f]+|\d+)\s*,\s*(0x[0-9A-Fa-f]+|\d+)\s*,\s*(0x[0-9A-Fa-f]+)\s*[)}]")
-RE_MARKER = re.compile(r"//.*\bVR:\s*(tested|checked)\b")
+RE_MARKER = re.compile(r"//.*\bVR:\s*(tested|checked|broken)\b(?:\s*\((.*)\))?")
 RE_FUNC_NAME = re.compile(r"decltype\(\s*&\s*([\w:]+)\s*\)")
-RE_FUNC_T = re.compile(r"using\s+func_t\b|_t\s*=\s*[\w:<>*&\s]+\(\s*\*\s*\)")
+# a relocation of a callable: Relocation<func_t>, Relocation<decltype(&...)> or Relocation<R (*)(...)>
+RE_FUNCTION_RELOCATION = re.compile(r"Relocation<\s*(?:func_t\s*>|decltype\s*\(\s*&|[^>;{]*\(\s*\*\s*\)\s*\()")
 RE_CALL_SITE = re.compile(r"CallSite\s+(\w+)\s*\{\s*(0x[0-9A-Fa-f]+)\s*,\s*(0x[0-9A-Fa-f]+)\s*\}")
 RE_SETTING = re.compile(r"inline Setting\*\s*(\w+)\(\)\s*\{\s*return detail::At\((0x[0-9A-Fa-f]+)\);\s*\}\s*//\s*([\w:]+)")
 
@@ -130,12 +131,17 @@ def load_names(path):
 
 
 def context_name(lines, index):
-    """The function a relocation belongs to: the decltype(&X) nearby, else the nearest declaration above."""
+    """The name a relocation belongs to, and whether it is called: a relocation of a callable is a function."""
+    line = lines[index]
+    is_function = bool(RE_FUNCTION_RELOCATION.search(line))
+    if not is_function:
+        m = re.search(r"Relocation<[^{(]*>\s*(\w+)\s*[{(]", line)
+        if m and m.group(1) not in ("func", "singleton", "data"):
+            return m.group(1), False
     for j in range(index, max(-1, index - 6), -1):
         m = RE_FUNC_NAME.search(lines[j])
         if m:
-            return m.group(1), True
-    is_function = any(RE_FUNC_T.search(lines[j]) for j in range(index, max(-1, index - 4), -1))
+            return m.group(1), is_function
     for j in range(index - 1, max(-1, index - 8), -1):
         m = re.search(r"([\w~]+)\s*\([^;]*\)\s*(const)?\s*(noexcept)?\s*$", lines[j].strip())
         if m and not lines[j].strip().startswith(("//", "if", "for", "while", "return")):
@@ -176,7 +182,7 @@ def scan_headers(include_dir):
                 for kind, value in entries:
                     found.append({
                         "file": rel, "line": i + 1, "name": name, "function": is_function and file not in ID_FILES,
-                        "kind": kind, "value": value, "marker": marker.group(1) if marker else None,
+                        "kind": kind, "value": value, "marker": marker.group(1) if marker else None, "reason": marker.group(2) if marker else None,
                         "table": file in ID_FILES,
                     })
     return found
@@ -201,6 +207,8 @@ def main():
     marker_counts = Counter()
     table_missing = 0
     for e in entries:
+        if not e["table"]:
+            marker_counts[e["marker"] or "untagged"] += 1
         if e["kind"] == "id":
             if e["value"] == 0:
                 e["status"] = "no VR address"
@@ -234,8 +242,11 @@ def main():
         else:
             e["status"] = "ok (data)" if section != ".text" else "ok (code)"
         status_counts[e["status"]] += 1
-        if not e["table"]:
-            marker_counts[e["marker"] or "untagged"] += 1
+
+    # a relocation tagged broken is a known gap; one that now resolves wants its tag looked at
+    known = [e for e in problems if e["marker"] == "broken"]
+    problems = [e for e in problems if e["marker"] != "broken"]
+    stale = [e for e in entries if e["marker"] == "broken" and e not in known]
 
     # VRHookSites and VRSettings carry their own checks
     special = []
@@ -261,7 +272,7 @@ def main():
     out.append(f"\nRTTI / vtable IDs with no row in the VR CSV: {table_missing} (they only matter when used).\n")
     out.append("## VR markers (outside the ID tables)\n")
     out.append("| Marker | Count |\n|---|---|")
-    for marker in ("tested", "checked", "untagged"):
+    for marker in ("tested", "checked", "broken", "untagged"):
         out.append(f"| {marker} | {marker_counts[marker]} |")
     out.append("\n## Problems\n")
     if problems:
@@ -271,13 +282,25 @@ def main():
             out.append(f"| {e['file']}:{e['line']} | {e['name']} | {target} | {e['status']} | {e['marker'] or ''} |")
     else:
         out.append("None.")
+    out.append("\n## Known broken\n")
+    if known:
+        out.append("| Where | Name | VR | Why |\n|---|---|---|---|")
+        for e in sorted(known, key=lambda e: (e["file"], e["line"])):
+            target = f"ID {e['value']}" if e["kind"] == "id" else f"{e['value']:#x}"
+            out.append(f"| {e['file']}:{e['line']} | {e['name']} | {target} | {e['reason'] or ''} |")
+    else:
+        out.append("None.")
+    if stale:
+        out.append("\nTagged broken but resolving now, so the tag wants a look:\n")
+        for e in stale:
+            out.append(f"- {e['file']}:{e['line']} {e['name']}: {e['status']}")
     out.append("\n## Hook sites and settings\n")
     out.append("| Name | VR | Result |\n|---|---|---|")
     for name, rva, result in special:
         out.append(f"| {name} | {rva + IMAGE_BASE:#x} | {result} |")
     out.append("\n## Tagged\n")
     out.append("| Where | Name | VR | Marker | Game name |\n|---|---|---|---|---|")
-    for e in sorted((e for e in entries if e["marker"]), key=lambda e: (e["marker"], e["file"], e["line"])):
+    for e in sorted((e for e in entries if e["marker"] in ("tested", "checked")), key=lambda e: (e["marker"], e["file"], e["line"])):
         rva = e.get("rva")
         target = f"{rva + IMAGE_BASE:#x}" if rva is not None else e.get("status", "")
         out.append(f"| {e['file']}:{e['line']} | {e['name']} | {target} | {e['marker']} | {names.get(rva, '') if rva is not None else ''} |")
@@ -287,9 +310,9 @@ def main():
         open(args.out, "w", encoding="utf-8", newline="\n").write(report)
     summary = ", ".join(f"{s}: {c}" for s, c in status_counts.most_common())
     print(f"{len(entries)} relocations - {summary}")
-    print(f"markers - tested {marker_counts['tested']}, checked {marker_counts['checked']}, untagged {marker_counts['untagged']}")
-    print(f"problems: {len(problems)}; hook sites / settings failing: {sum(1 for s in special if s[2] != 'ok')} of {len(special)}")
-    return 1 if any(e["marker"] for e in problems) or any(s[2] != "ok" for s in special) else 0
+    print(f"markers - tested {marker_counts['tested']}, checked {marker_counts['checked']}, broken {marker_counts['broken']}, untagged {marker_counts['untagged']}")
+    print(f"problems: {len(problems)}; known broken: {len(known)} (stale tags: {len(stale)}); hook sites / settings failing: {sum(1 for s in special if s[2] != 'ok')} of {len(special)}")
+    return 1 if any(e["marker"] for e in problems) or stale or any(s[2] != "ok" for s in special) else 0
 
 
 if __name__ == "__main__":

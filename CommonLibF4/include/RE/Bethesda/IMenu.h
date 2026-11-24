@@ -179,7 +179,7 @@ namespace RE
 
 		[[nodiscard]] static FlatScreenModel* GetSingleton()
 		{
-			static REL::Relocation<FlatScreenModel**> singleton{ REL::ID(847741) };
+			static REL::Relocation<FlatScreenModel**> singleton{ REL::VariantID(847741, 0, 0x5AC0EB0) };  // VR: checked
 			return *singleton;
 		}
 
@@ -937,7 +937,7 @@ namespace RE
 		void ClearModel()
 		{
 			using func_t = decltype(&Inventory3DManager::ClearModel);
-			static REL::Relocation<func_t> func{ REL::ID(63218) };
+			static REL::Relocation<func_t> func{ REL::VariantID(63218, 0, 0x13092F0) };  // VR: checked (VR first handles a VR-only member, then runs the flat body)
 			return func(this);
 		}
 
@@ -958,21 +958,21 @@ namespace RE
 		void End3D()
 		{
 			using func_t = decltype(&Inventory3DManager::End3D);
-			static REL::Relocation<func_t> func{ REL::ID(1512675) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1512675, 0, 0x1307050) };  // VR: checked
 			return func(this);
 		}
 
 		void SetModelScale(float a_scale)
 		{
 			using func_t = decltype(&Inventory3DManager::SetModelScale);
-			static REL::Relocation<func_t> func{ REL::ID(1319701) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1319701, 0, 0x1307FF0) };  // VR: checked
 			return func(this, a_scale);
 		}
 
 		void SetModelScreenPosition(const NiPoint3& a_position, bool a_screenCoords)
 		{
 			using func_t = decltype(&Inventory3DManager::SetModelScreenPosition);
-			static REL::Relocation<func_t> func{ REL::ID(2967) };
+			static REL::Relocation<func_t> func{ REL::VariantID(2967, 0, 0x1307FC0) };  // VR: checked
 			return func(this, a_position, a_screenCoords);
 		}
 
@@ -1103,14 +1103,14 @@ namespace RE
 		void CheckAndSetItemForPlacement()
 		{
 			using func_t = decltype(&WorkshopMenu::CheckAndSetItemForPlacement);
-			static REL::Relocation<func_t> func{ REL::ID(1541862) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1541862, 0, 0xC03100) };  // VR: checked
 			return func(this);
 		}
 
 		void UpdateButtonText()
 		{
 			using func_t = decltype(&WorkshopMenu::UpdateButtonText);
-			static REL::Relocation<func_t> func{ REL::ID(1089189) };
+			static REL::Relocation<func_t> func{ REL::ID(1089189) };  // VR: broken (no VR function matches it by code, callers or call graph)
 			return func(this);
 		}
 
@@ -1580,7 +1580,7 @@ namespace RE
 		void TakeAllItems()
 		{
 			using func_t = decltype(&ContainerMenu::TakeAllItems);
-			static REL::Relocation<func_t> func{ REL::ID(1323703) };
+			static REL::Relocation<func_t> func{ REL::ID(1323703) };  // VR: broken (no VR function matches it by code, callers or call graph)
 			return func(this);
 		}
 
@@ -2262,7 +2262,7 @@ namespace RE
 		static void OnExitFurniture()
 		{
 			using func_t = decltype(&SitWaitMenu::OnExitFurniture);
-			static REL::Relocation<func_t> func{ REL::ID(454795) };
+			static REL::Relocation<func_t> func{ REL::ID(454795) };  // VR: broken (no VR function matches it by code, callers or call graph)
 			return func();
 		}
 
@@ -2408,7 +2408,7 @@ namespace RE
 		static void ShowHolotapeInTerminal(const BSFixedString& a_holotapePath)
 		{
 			using func_t = decltype(&HolotapeMenu::ShowHolotapeInTerminal);
-			static REL::Relocation<func_t> func{ REL::ID(390509) };
+			static REL::Relocation<func_t> func{ REL::VariantID(390509, 0, 0xB8E310) };  // VR: checked
 			return func(a_holotapePath);
 		}
 

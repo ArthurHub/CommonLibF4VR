@@ -675,7 +675,7 @@ namespace RE
 			void SetEnableDynamicResolution(bool a_enableDynamicResolution)
 			{
 				using func_t = decltype(&RenderTargetManager::SetEnableDynamicResolution);
-				static REL::Relocation<func_t> func{ REL::ID(116947) };
+				static REL::Relocation<func_t> func{ REL::VariantID(116947, 0, 0x1DBA2D0) };  // VR: checked
 				return func(this, a_enableDynamicResolution);
 			}
 

@@ -40,7 +40,12 @@ A relocation's line carries a marker comment that says how far it is known to wo
 - `// VR: tested`: called on VR in game and seen to work (a mod that ships it counts).
 - `// VR: checked`: address and signature read off the VR binary (function start, the arguments it reads,
   what it returns), but not called in game.
+- `// VR: broken (why)`: known not to work on VR, with the reason (usually an ID the VR address library
+  lacks, with no VR address found for it yet). Calling it on VR crashes.
 - no marker: unknown on VR.
 
-Tag a relocation in the same change that adds or verifies it. The report counts the markers, and lists every
-tagged relocation with the game's own name for its address.
+Tag a relocation in the same change that adds or verifies it. The report counts the markers, lists the
+known-broken ones with their reasons apart from new problems, and lists every tested or checked relocation
+with the game's own name for its address.
+
+The exit code is also 1 when a relocation tagged broken resolves after all, so its tag gets a look.

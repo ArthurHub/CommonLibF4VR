@@ -8,8 +8,9 @@ This is a VR split of CommonLibF4 from [alandtse/CommonLibF4](https://github.com
 
 ## What works on VR
 
-A relocation's line is tagged `// VR: tested` (called in game on VR and seen to work) or `// VR: checked`
-(address and signature read off the VR binary), and untagged when it is unknown on VR.
+A relocation's line is tagged `// VR: tested` (called in game on VR and seen to work), `// VR: checked`
+(address and signature read off the VR binary) or `// VR: broken (why)` (known not to work on VR), and untagged
+when it is unknown on VR.
 [VRAddressCheck](VRAddressCheck/README.md) checks every address against a decrypted Fallout4VR.exe and the VR
 address library, and reports the tags.
 

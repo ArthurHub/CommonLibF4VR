@@ -428,9 +428,12 @@ namespace RE
 	};
 	static_assert(sizeof(DEFAULT_OBJECT_DATA) == 0x20);
 
+	// Fallout 4 VR's table holds 396 entries: it inserts "Help Manual VR - Vive Wand" at 230, before
+	// "Keyword - Type Ammo", and adds "Tutorial - Swimming" at the end, so on VR every DEFAULT_OBJECT from 230 on
+	// sits one index later. The span covers the first 394.
 	[[nodiscard]] inline std::span<DEFAULT_OBJECT_DATA, 394> GetDefaultObjectData()
 	{
-		static REL::Relocation<DEFAULT_OBJECT_DATA(*)[394]> data{ REL::ID(838886) };
+		static REL::Relocation<DEFAULT_OBJECT_DATA(*)[394]> data{ REL::VariantID(838886, 0, 0x3712E80) };  // VR: checked
 		return { *data };
 	}
 

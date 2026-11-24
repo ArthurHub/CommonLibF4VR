@@ -142,7 +142,7 @@ namespace RE
 				float    a_dimmerVal)
 			{
 				using func_t = decltype(&Renderer::MainScreen_AddPointLight);
-				static REL::Relocation<func_t> func{ REL::ID(1335675) };
+				static REL::Relocation<func_t> func{ REL::VariantID(1335675, 0, 0xB00550) };  // VR: checked
 				return func(this, a_translation, a_diffuse, a_radius, a_dimmerVal);
 			}
 
@@ -232,7 +232,7 @@ namespace RE
 			void MainScreen_SetWorldAttached3D(NiAVObject* a_root3D)
 			{
 				using func_t = decltype(&Renderer::MainScreen_SetWorldAttached3D);
-				static REL::Relocation<func_t> func{ REL::ID(724778) };
+				static REL::Relocation<func_t> func{ REL::VariantID(724778, 0, 0xB00500) };  // VR: checked
 				return func(this, a_root3D);
 			}
 
@@ -254,14 +254,14 @@ namespace RE
 				float    a_dimmerVal)
 			{
 				using func_t = decltype(&Renderer::Offscreen_AddLight);
-				static REL::Relocation<func_t> func{ REL::ID(1267198) };
+				static REL::Relocation<func_t> func{ REL::VariantID(1267198, 0, 0xB00AF0) };  // VR: checked
 				return func(this, a_translation, a_diffuse, a_specular, a_dimmerVal);
 			}
 
 			void Offscreen_Clear3D()
 			{
 				using func_t = decltype(&Renderer::Offscreen_Clear3D);
-				static REL::Relocation<func_t> func{ REL::ID(1533262) };
+				static REL::Relocation<func_t> func{ REL::VariantID(1533262, 0, 0xB00AC0) };  // VR: checked
 				return func(this);
 			}
 
@@ -316,7 +316,7 @@ namespace RE
 			void Offscreen_SetDebugMode(bool a_on, bool a_small, std::uint32_t a_target)
 			{
 				using func_t = decltype(&Renderer::Offscreen_SetDebugMode);
-				static REL::Relocation<func_t> func{ REL::ID(1277879) };
+				static REL::Relocation<func_t> func{ REL::VariantID(1277879, 0, 0xB01140) };  // VR: checked
 				return func(this, a_on, a_small, a_target);
 			}
 
@@ -327,7 +327,7 @@ namespace RE
 				float   a_dimmerVal)
 			{
 				using func_t = decltype(&Renderer::Offscreen_SetDirectionalLight);
-				static REL::Relocation<func_t> func{ REL::ID(987144) };
+				static REL::Relocation<func_t> func{ REL::VariantID(987144, 0, 0xB00C40) };  // VR: checked
 				return func(this, a_xyPlaneAngle, a_zAngle, a_diffuse, a_dimmerVal);
 			}
 

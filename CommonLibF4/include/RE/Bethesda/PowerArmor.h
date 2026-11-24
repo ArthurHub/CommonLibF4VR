@@ -119,7 +119,7 @@ namespace RE
 		void ShowPipboyPAGeometry()
 		{
 			using func_t = decltype(&PowerArmorGeometry::ShowPipboyPAGeometry);
-			static REL::Relocation<func_t> func{ REL::ID(19066) };
+			static REL::Relocation<func_t> func{ REL::VariantID(19066, 0, 0x12FD820) };  // VR: checked (VR's own version: the image-space trigger moved into a helper)
 			return func(this);
 		}
 

@@ -45,14 +45,14 @@ namespace RE
 		void QueueShow1stPerson(bool a_show1stPerson)
 		{
 			using func_t = decltype(&TaskQueueInterface::QueueShow1stPerson);
-			static REL::Relocation<func_t> func{ REL::ID(994377) };
+			static REL::Relocation<func_t> func{ REL::VariantID(994377, 0, 0xDADDB0) };  // VR: checked
 			return func(this, a_show1stPerson);
 		}
 
 		void QueueShowPipboy(DEFAULT_OBJECT a_animType)
 		{
 			using func_t = decltype(&TaskQueueInterface::QueueShowPipboy);
-			static REL::Relocation<func_t> func{ REL::ID(1133684) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1133684, 0, 0xDAEF10) };  // VR: checked
 			return func(this, a_animType);
 		}
 
