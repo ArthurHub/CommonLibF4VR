@@ -172,6 +172,7 @@
 #include "RE/Bethesda/ControlMap.h"
 #include "RE/Bethesda/Events.h"
 #include "RE/Bethesda/FavoritesManager.h"
+#include "RE/Bethesda/FlatHookSites.h"
 #include "RE/Bethesda/FormComponents.h"
 #include "RE/Bethesda/FormFactory.h"
 #include "RE/Bethesda/FormUtil.h"
