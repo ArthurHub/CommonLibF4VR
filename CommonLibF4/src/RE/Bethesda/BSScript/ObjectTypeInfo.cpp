@@ -177,7 +177,7 @@ namespace RE
 		void ObjectTypeInfo::Dtor()
 		{
 			using func_t = decltype(&ObjectTypeInfo::Dtor);
-			static REL::Relocation<func_t> func{ REL::VariantID(1047917, 0, 0x26C1830) };
+			static REL::Relocation<func_t> func{ REL::VariantID(1047917, 2314513, 0x26C1830) };
 			return func(this);
 		}
 	}

@@ -51,35 +51,15 @@ namespace RE
 		virtual ~NiAVObject();  // NOLINT(modernize-use-override) 00
 
 		// add
-#ifndef FALLOUT_CROSS_VR
-		// One runtime: the declarations are that runtime's vtable, so classes deriving from
-		// this one have their own virtuals in the right slots too.
-#	ifdef ENABLE_FALLOUT_VR
+#if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
 		// FO4VR only. Sets the world transform from the parent's and the local one; NiNode
 		// then does the same for its children. No bounds, controllers or update data.
-		virtual void UpdateWorldFromParent();  // VR 2A
-#	endif
-		virtual void        UpdateControllers(NiUpdateData& a_data);                                                            // 28
-		virtual void        PerformOp(PerformOpFunc& a_operation);                                                              // 29
-		virtual void        AttachProperty([[maybe_unused]] NiAlphaProperty* a_prop) { return; }                                // 2A
-		virtual void        SetMaterialNeedsUpdate(bool) { return; }                                                            // 2B
-		virtual void        SetDefaultMaterialNeedsUpdateFlag(bool) { return; }                                                 // 2C
-		virtual void        SetAppCulled(bool a_appCulled);                                                                     // 2D
-		virtual NiAVObject* GetObjectByName(const BSFixedString& a_name) { return name == a_name ? this : nullptr; }            // 2E
-		virtual void        SetSelectiveUpdateFlags(bool& a_selectiveUpdate, bool a_selectiveUpdateTransforms, bool& a_rigid);  // 2F
-		virtual void        UpdateDownwardPass(NiUpdateData& a_data, std::uint32_t a_flags);                                    // 30
-		virtual void        UpdateSelectedDownwardPass(NiUpdateData& a_data, std::uint32_t a_flags);                            // 31
-		virtual void        UpdateRigidDownwardPass(NiUpdateData& a_data, std::uint32_t a_flags);                               // 32
-		virtual void        UpdateWorldBound();                                                                                 // 33
-		virtual void        UpdateWorldData(NiUpdateData* a_data);                                                              // 34
-		virtual void        UpdateTransformAndBounds(NiUpdateData& a_data);                                                     // 35
-		virtual void        UpdateTransforms(NiUpdateData& a_data);                                                             // 36
-		virtual void        PreAttachUpdate(NiNode* a_eventualParent, NiUpdateData& a_data);                                    // 37
-		virtual void        PostAttachUpdate();                                                                                 // 38
-		virtual void        OnVisible([[maybe_unused]] NiCullingProcess& a_culler) { return; }                                  // 39
-#else
-		// Flat and VR in one build: no single vtable fits both, so each call picks its slot
-		// when it runs and none of these can be overridden.
+		void UpdateWorldFromParent()  // VR 2A
+		{
+			REL::RelocateVirtual<decltype(&NiAVObject::UpdateWorldFromParent)>(0x2A, 0x2A, this);
+		}
+#endif
+
 		void UpdateControllers(NiUpdateData& a_data)  // 28
 		{
 			REL::RelocateVirtual<decltype(&NiAVObject::UpdateControllers)>(0x28, 0x2B, this, a_data);
@@ -169,7 +149,6 @@ namespace RE
 		{
 			REL::RelocateVirtual<decltype(&NiAVObject::OnVisible)>(0x39, 0x3C, this, a_culler);
 		}
-#endif
 
 		F4_HEAP_REDEFINE_ALIGNED_NEW(NiAVObject);
 

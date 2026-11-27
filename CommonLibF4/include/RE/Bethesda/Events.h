@@ -598,7 +598,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESEnterSneakingEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESEnterSneakingEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::RelocationID(0, 2201837) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(28138, 2201837) };
 			return func();
 		}
 
@@ -613,7 +613,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESEquipEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESEquipEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1251703, 0) };  // VR: checked
+			static REL::Relocation<func_t> func{ REL::RelocationID(1251703, 2201838) };  // VR: checked
 			return func();
 		}
 
@@ -750,7 +750,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESHitEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESHitEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::RelocationID(1411899, 0) };  // VR: checked
+			static REL::Relocation<func_t> func{ REL::RelocationID(1411899, 2201886) };  // VR: checked
 			return func();
 		}
 
@@ -771,7 +771,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESMagicEffectApplyEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESMagicEffectApplyEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::VariantID(1327824, 0, 0x42B790) };  // VR: checked
+			static REL::Relocation<func_t> func{ REL::VariantID(1327824, 2201851, 0x42B790) };  // VR: checked
 			return func();
 		}
 
@@ -803,7 +803,7 @@ namespace RE
 		[[nodiscard]] static BSTEventSource<TESSwitchRaceCompleteEvent>* GetEventSource()
 		{
 			using func_t = decltype(&TESSwitchRaceCompleteEvent::GetEventSource);
-			static REL::Relocation<func_t> func{ REL::RelocationID(0, 2201874) };
+			static REL::Relocation<func_t> func{ REL::RelocationID(976262, 2201874) };
 			return func();
 		}
 
@@ -878,7 +878,7 @@ namespace RE
 	public:
 		[[nodiscard]] static TESInitScriptEventSource* GetSingleton()
 		{
-			static REL::Relocation<TESInitScriptEventSource*> singleton{ REL::VariantID(485633, 2691330, 0x5A398F0) };  // VR: checked
+			static REL::Relocation<TESInitScriptEventSource*> singleton{ REL::VariantID(444105, 2691330, 0x5A398F0) };  // VR: checked
 			return singleton.get();
 		}
 	};

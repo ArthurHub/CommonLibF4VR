@@ -42,17 +42,6 @@ namespace RE
 		// add
 		// Flat slot in each comment; the FO4VR slot is three higher (see NiAVObject). Of two
 		// overloads, the one that returns the removed child comes first in the vtable.
-#ifndef FALLOUT_CROSS_VR
-		virtual void AttachChild(NiAVObject* a_child, bool a_firstAvail);                                 // 3A
-		virtual void InsertChildAt(std::uint32_t a_idx, NiAVObject* a_child);                             // 3B
-		virtual void DetachChild(NiAVObject* a_child);                                                    // 3D
-		virtual void DetachChild(NiAVObject* a_child, NiPointer<NiAVObject>& a_avObject);                 // 3C
-		virtual void DetachChildAt(std::uint32_t a_idx);                                                  // 3F
-		virtual void DetachChildAt(std::uint32_t a_idx, NiPointer<NiAVObject>& a_avObject);               // 3E
-		virtual void SetAt(std::uint32_t a_idx, NiAVObject* a_child);                                     // 41
-		virtual void SetAt(std::uint32_t a_idx, NiAVObject* a_child, NiPointer<NiAVObject>& a_avObject);  // 40
-		virtual void UpdateUpwardPass(NiUpdateData& a_data);                                              // 42
-#else
 		void AttachChild(NiAVObject* a_child, bool a_firstAvail)  // 3A
 		{
 			REL::RelocateVirtual<decltype(&NiNode::AttachChild)>(0x3A, 0x3D, this, a_child, a_firstAvail);
@@ -103,7 +92,6 @@ namespace RE
 		{
 			REL::RelocateVirtual<decltype(&NiNode::UpdateUpwardPass)>(0x42, 0x45, this, a_data);
 		}
-#endif
 
 		F4_HEAP_REDEFINE_ALIGNED_NEW(NiNode);
 

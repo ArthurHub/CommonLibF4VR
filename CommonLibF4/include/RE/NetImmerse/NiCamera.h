@@ -20,13 +20,7 @@ namespace RE
 		virtual ~NiCamera();  // 00
 
 		// override
-		virtual const NiRTTI* GetRTTI() const override;                             // 02
-		virtual NiObject*     CreateClone(NiCloningProcess& a_cloneData) override;  // 1A
-		virtual void          LoadBinary(NiStream& a_stream) override;              // 1B
-		virtual void          LinkObject(NiStream& a_stream) override;              // 1C
-		virtual bool          RegisterStreamables(NiStream& a_stream) override;     // 1D
-		virtual void          SaveBinary(NiStream& a_stream) override;              // 1E
-		virtual bool          IsEqual(NiObject* a_object) override;                 // 1F
+		virtual const NiRTTI* GetRTTI() const override;  // 02
 
 		// members
 #if defined(ENABLE_FALLOUT_VR) && !defined(ENABLE_FALLOUT_NG) && !defined(ENABLE_FALLOUT_F4)

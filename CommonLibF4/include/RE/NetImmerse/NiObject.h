@@ -66,38 +66,116 @@ namespace RE
 		virtual BSLines*             IsLinesGeom() { return nullptr; }          // 13
 		virtual NiLight*             IsLight() { return nullptr; }              // 14
 #if defined(ENABLE_FALLOUT_VR) && !defined(FALLOUT_CROSS_VR)
-		// FO4VR has two more casts here, so every slot from here on is two higher than the flat
-		// number in its comment (NiObject ends at 29). Only NiPointLight and NiSpotLight
-		// override them, both returning this; the names follow from that.
-		virtual NiPointLight*       IsPointLight() { return nullptr; }        // VR 16
-		virtual const NiPointLight* IsPointLight() const { return nullptr; }  // VR 15
-#endif
-		virtual bhkNiCollisionObject* IsBhkNiCollisionObject()
+		// FO4VR has two more casts here, so every NiObject slot after IsLight is two higher on
+		// FO4VR. Only NiPointLight and NiSpotLight override them, both returning this; the names
+		// follow from that.
+		NiPointLight* IsPointLight()  // VR 16
 		{
-			return nullptr;
-		}                                                                                                                   // 15
-		virtual bhkBlendCollisionObject*   IsBhkBlendCollisionObject() { return nullptr; }                                  // 16
-		virtual bhkRigidBody*              IsBhkRigidBody() { return nullptr; }                                             // 17
-		virtual bhkLimitedHingeConstraint* IsBhkLimitedHingeConstraint() { return nullptr; }                                // 18
-		virtual bhkNPCollisionObject*      IsbhkNPCollisionObject() { return nullptr; }                                     // 19
-		virtual NiObject*                  CreateClone([[maybe_unused]] NiCloningProcess& a_cloneData) { return nullptr; }  // 1A
-		virtual void                       LoadBinary([[maybe_unused]] NiStream& a_stream) { return; }                      // 1B
-		virtual void                       LinkObject([[maybe_unused]] NiStream& a_stream) { return; }                      // 1C
-		virtual bool                       RegisterStreamables(NiStream& a_stream);                                         // 1D
-		virtual void                       SaveBinary([[maybe_unused]] NiStream& a_stream) { return; }                      // 1E
-		virtual bool                       IsEqual(NiObject* a_object);                                                     // 1F
-		virtual void                       ProcessClone(NiCloningProcess& a_cloning);                                       // 20
-		virtual void                       PostLinkObject([[maybe_unused]] NiStream& a_stream) { return; }                  // 21
-		virtual bool                       StreamCanSkip() { return false; }                                                // 22
-		virtual const NiRTTI*              GetStreamableRTTI() { return GetRTTI(); }                                        // 23
-		virtual std::uint32_t              GetBlockAllocationSize() const { return 0; }                                     // 24
-		virtual NiObjectGroup*             GetGroup() const { return nullptr; }                                             // 25
-		virtual void                       SetGroup(NiObjectGroup*) { return; }                                             // 26
-		virtual NiControllerManager*       IsNiControllerManager() { return nullptr; }                                      // 27
+			using func_t = NiPointLight* (NiObject::*)();
+			return REL::RelocateVirtual<func_t>(0x16, 0x16, this);
+		}
 
-		// A build for both flat and VR keeps the flat table above, so on FO4VR the virtuals
-		// from IsBhkNiCollisionObject on reach the wrong slot there. Use a VR-only build, or
-		// REL::RelocateVirtual with the flat slot and the flat slot plus two.
+		const NiPointLight* IsPointLight() const  // VR 15
+		{
+			using func_t = const NiPointLight* (NiObject::*)() const;
+			return REL::RelocateVirtual<func_t>(0x15, 0x15, this);
+		}
+#endif
+
+		bhkNiCollisionObject* IsBhkNiCollisionObject()  // 15
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::IsBhkNiCollisionObject)>(0x15, 0x17, this);
+		}
+
+		bhkBlendCollisionObject* IsBhkBlendCollisionObject()  // 16
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::IsBhkBlendCollisionObject)>(0x16, 0x18, this);
+		}
+
+		bhkRigidBody* IsBhkRigidBody()  // 17
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::IsBhkRigidBody)>(0x17, 0x19, this);
+		}
+
+		bhkLimitedHingeConstraint* IsBhkLimitedHingeConstraint()  // 18
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::IsBhkLimitedHingeConstraint)>(0x18, 0x1A, this);
+		}
+
+		bhkNPCollisionObject* IsbhkNPCollisionObject()  // 19
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::IsbhkNPCollisionObject)>(0x19, 0x1B, this);
+		}
+
+		NiObject* CreateClone(NiCloningProcess& a_cloneData)  // 1A
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::CreateClone)>(0x1A, 0x1C, this, a_cloneData);
+		}
+
+		void LoadBinary(NiStream& a_stream)  // 1B
+		{
+			REL::RelocateVirtual<decltype(&NiObject::LoadBinary)>(0x1B, 0x1D, this, a_stream);
+		}
+
+		void LinkObject(NiStream& a_stream)  // 1C
+		{
+			REL::RelocateVirtual<decltype(&NiObject::LinkObject)>(0x1C, 0x1E, this, a_stream);
+		}
+
+		bool RegisterStreamables(NiStream& a_stream)  // 1D
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::RegisterStreamables)>(0x1D, 0x1F, this, a_stream);
+		}
+
+		void SaveBinary(NiStream& a_stream)  // 1E
+		{
+			REL::RelocateVirtual<decltype(&NiObject::SaveBinary)>(0x1E, 0x20, this, a_stream);
+		}
+
+		bool IsEqual(NiObject* a_object)  // 1F
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::IsEqual)>(0x1F, 0x21, this, a_object);
+		}
+
+		void ProcessClone(NiCloningProcess& a_cloning)  // 20
+		{
+			REL::RelocateVirtual<decltype(&NiObject::ProcessClone)>(0x20, 0x22, this, a_cloning);
+		}
+
+		void PostLinkObject(NiStream& a_stream)  // 21
+		{
+			REL::RelocateVirtual<decltype(&NiObject::PostLinkObject)>(0x21, 0x23, this, a_stream);
+		}
+
+		bool StreamCanSkip()  // 22
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::StreamCanSkip)>(0x22, 0x24, this);
+		}
+
+		const NiRTTI* GetStreamableRTTI()  // 23
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::GetStreamableRTTI)>(0x23, 0x25, this);
+		}
+
+		std::uint32_t GetBlockAllocationSize() const  // 24
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::GetBlockAllocationSize)>(0x24, 0x26, this);
+		}
+
+		NiObjectGroup* GetGroup() const  // 25
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::GetGroup)>(0x25, 0x27, this);
+		}
+
+		void SetGroup(NiObjectGroup* a_group)  // 26
+		{
+			REL::RelocateVirtual<decltype(&NiObject::SetGroup)>(0x26, 0x28, this, a_group);
+		}
+
+		NiControllerManager* IsNiControllerManager()  // 27
+		{
+			return REL::RelocateVirtual<decltype(&NiObject::IsNiControllerManager)>(0x27, 0x29, this);
+		}
 
 		// A copy of the object and everything under it (CreateClone, then ProcessClone on each), made under
 		// a_cloning; a NiNode clone comes back with no parent.
