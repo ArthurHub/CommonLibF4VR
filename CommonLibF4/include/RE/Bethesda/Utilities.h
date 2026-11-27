@@ -60,7 +60,7 @@ namespace RE
 			return func(a_projectilePos, a_projectileVelocity, a_projectileGravity, a_targetPos, a_heading, a_trajectoryPos);
 		}
 
-		static REL::Relocation<float> fWorldGravity{ REL::ID(1378547) };
+		static REL::Relocation<float> fWorldGravity{ REL::RelocationID(1378547, 2700340) };
 	};
 
 	namespace AnimationSystemUtils

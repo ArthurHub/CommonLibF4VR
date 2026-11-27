@@ -82,7 +82,7 @@ namespace RE
 			return func(a_furniture, a_force3DUpdate, a_tempItemToAdd, a_hideCore);
 		}
 
-		inline REL::Relocation<SettingT<GameSettingCollection>*> fNewBatteryCapacity{ REL::ID(1134204) };
+		inline REL::Relocation<SettingT<GameSettingCollection>*> fNewBatteryCapacity{ REL::RelocationID(1134204, 0) };  // no 1.10.984 ID known: null there
 	}
 
 	class __declspec(novtable) PowerArmorGeometry :
