@@ -138,15 +138,9 @@ namespace REL
             [](auto&& a_lhs, auto&& a_rhs) {
                 return a_lhs.id < a_rhs.id;
             });
-		bool failed = false;
-		if (it == _id2offset.end()) {
-			failed = true;
-		} else if FALLOUT_REL_VR_CONSTEXPR (Module::IsVR()) {
-			if (it->id != a_id) {
-				failed = true;
-			}
-		}
-		if (failed) {
+		// Exact match only: lower_bound lands on the next ID when this one is missing, and
+		// that ID's address would be called in its place.
+		if (it == _id2offset.end() || it->id != a_id) {
 			const auto version = Module::get().version();
 			const auto str = std::format(
 				"Failed to find the id within the address library: {}\n"
